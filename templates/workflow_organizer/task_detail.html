@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} {{ task.name }} {% endblock %}
+
+{% block content %}
+
+{% include "includes/sidebar.html" %}
+
+  <div class="row">
+    <header>
+      <div class="page-header min-height-300" style="background-image: url({% static 'img/backgrounds/task-detail.jpeg' %});">
+        <span class="mask bg-gradient-dark opacity-6"></span>
+      </div>
+    </header>
+
+    <div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
+      <section class="py-sm-7 py-5 position-relative mt-3">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 mx-auto">
+              <div class="col-lg-9 col-md-9 z-index-2 position-relative px-md-1 px-sm-5 mx-auto mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h3 class="mb-2 font-weight-bold assignment-name">{{ task.name }}</h3>
+                  <li style="box-shadow: 0 0.3125rem 0.625rem 0 rgba(51, 153, 255, 0.32)" class="card dropdown dropdown-hover mx-2">
+                    <a class="my-2 mx-3 d-flex cursor-pointer align-items-center" id="dropdownMenuDocs" data-bs-toggle="dropdown" aria-expanded="false">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-menu-button-wide" viewBox="0 0 16 16">
+                        <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v2A1.5 1.5 0 0 1 14.5 5h-13A1.5 1.5 0 0 1 0 3.5v-2zM1.5 1a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-13z"/>
+                        <path d="M2 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm10.823.323-.396-.396A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0zM0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2H1zm14-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2h14zM2 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+                      </svg>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive mt-0 mt-lg-3 p-3 border-radius-lg" aria-labelledby="dropdownMenuDocs">
+                      <div class="d-none d-lg-block">
+                        <ul class="list-group">
+                          <li class="nav-item list-group-item border-0 p-0">
+                            <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:task-update' pk=task.id %}">
+                              <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Edit task</h6>
+                            </a>
+                          </li>
+                          <li class="nav-item list-group-item border-0 p-0">
+                            <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:task-delete' pk=task.id %}">
+                              <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Delete task</h6>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </ul>
+                  </li>
+                </div>
+                <table class="mx-n2 table table-borderless">
+                  <thead>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-muted header-name"><i>Priority</i></td>
+                      <td>
+                        {% if task.priority in "U" %}
+                          <span class="badge bg-danger text-uppercase fw-semibold">{{ task.get_priority_display }}</span>
+                        {% elif task.priority in "A" %}
+                          <span class="badge bg-warning text-uppercase fw-semibold">{{ task.get_priority_display }}</span>
+                        {% else %}
+                          <span class="badge bg-success text-uppercase fw-semibold">{{ task.get_priority_display }}</span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted header-name"><i>Status</i></td>
+                      <td>{% if not task.is_completed and task.assignees.count > 0 %}Underway{% elif task.is_completed %}Completed{% else %}Queue{% endif %}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted header-name"><i>Assignees</i></td>
+                      <td>
+                        <div class="dropdown">
+                          <div class="list-unstyled">
+                            {% for assignee in task.assignees.all %}
+                              <div class="list-item mb-2" >
+                                <a href="{% url 'workflow_organizer:worker-detail' pk=assignee.id %}"
+                                 class="text-muted avatar-sm text-decoration-none"
+                                 title="{{ assignee.first_name }} {{ assignee.last_name }}">
+                                 <img style="border-radius: 50% !important; object-fit: cover; width: 50px; height: 50px;"
+                                   src="{% static 'img/team/'|add:assignee.username|add:'.jpeg' %}">
+                                 <p style="margin: 5px; display: inline">{{ assignee.first_name }} {{assignee.last_name }}</p>
+                                </a>
+                              </div>
+                            {% endfor %}
+                            <div class="list-item mb-2">
+                              {% if task in user.tasks.all %}
+                                <a href="{% url 'workflow_organizer:toggle-task-assign' pk=task.id %}" class="text-muted text-decoration-none" >
+                                  <svg style="margin: 0 3px 4px 7px" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-slash" viewBox="0 0 16 16">
+                                    <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465l3.465-3.465Zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465Zm-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm.256 7a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                                  </svg>
+                                  <i class="text-sm order-message">Remove me</i>
+                                </a>
+                              {% else %}
+                                <a href="{% url 'workflow_organizer:toggle-task-assign' pk=task.id %}" class="text-muted text-decoration-none" >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                                    <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                                  </svg>
+                                  <i class="text-sm order-message">Add me</i>
+                                </a>
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted header-name"><i>Drop dead date</i></td>
+                      <td>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                          <path fill="red" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                          <path fill="red" d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                        </svg>
+                        {{ task.time_constraints }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted header-name"><i>Task type</i></td>
+                      <td>
+                        <i>#{{ task.task_type }}</i>
+                      </td>
+                    </tr>
+                    <tr>
+                      {% if task.tags.all %}
+                        <td class="text-muted header-name"><i>Tags</i></td>
+                        <td>
+                          <div class="dropdown">
+                            {% for tag in task.tags.all %}
+                              <a
+                              style="color: white; background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size:10px; height:22px; padding:3px 3px; margin: 0"
+                              class="btn button-sm fw-semibold"
+                              href="{% url 'workflow_organizer:task-panel' %}?tag={{ tag.name | urlencode }}">
+                              {{ tag.name }}
+                              </a>
+                            {% endfor %}
+                          </div>
+                        </td>
+                      {% endif %}
+                    </tr>
+                  </tbody>
+                </table>
+                <hr class="hr mb-4" style="border-bottom: 1px solid rgba(0, 0, 0, .5)">
+                <div class="row mb-4">
+                  <h5 class="h5">Queue</h5>
+                  <p>{{ task.depiction }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+{% endblock content %}

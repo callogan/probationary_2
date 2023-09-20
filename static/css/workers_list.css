@@ -1,0 +1,56 @@
+.li {list-style: none}
+
+.a {
+  display: flex;
+}
+
+.ol {
+  display: flex;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+ }
+
+.link__info {
+  display: flex;
+  flex-direction: column;
+ }
+
+
+.rating-points {
+    margin-top: 1px; /* Adjusted margin */
+}
+
+/* Style for truncating long names with ellipsis */
+.rating-points:hover::after {
+    content: ": " attr(data-rating);
+    position: absolute;
+    white-space: nowrap;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px 8px;
+    z-index: 1;
+    left: 0;
+    top: -20px; /* Adjusted top position */
+    transform: translate(0, -100%); /* Adjusted translation */
+    min-width: 100px; /* Adjust this width as needed */
+}
+
+.username {
+    color: #ffb41d;
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+{% include "includes/sidebar.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="{% static 'css/project_tracking_panel.css' %}">
+  <title>Project Tracking System</title>
+</head>
+
+<body>
+    <div class="header pt-10" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 30vh;">
+      <div style="margin-top: 90px; margin-bottom: 5px;">
+        <h2 class="text-primary font-weight-bolder text-center mb-4" style="margin-top: 0.3em; font-size: 40px">Project tracking system</h2>
+        <h5 class="text-center fw-semibold mb-6" style="font-size: 23px">Consolidated information about projects in various metrics</h5>
+      </div>
+    </div>
+    <section class="pt-sm-8 pb-5 mt-5 position-relative bg-gradient-azure overflow-hidden parental-widget">
+      <div class="position-absolute w-100 z-inde-1 top-0 mt-n3">
+        <svg width="100%" viewBox="0 -2 1920 157" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <title>wave-down</title>
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="Artboard" fill="#FFFFFF" fill-rule="nonzero">
+              <g id="wave-down">
+                <path d="M0,60.8320331 C299.333333,115.127115 618.333333,111.165365 959,47.8320321 C1299.66667,-15.5013009 1620.66667,-15.2062179 1920,47.8320331 L1920,156.389409 L0,156.389409 L0,60.8320331 Z" id="Path-Copy-2" transform="translate(960.000000, 78.416017) rotate(180.000000) translate(-960.000000, -78.416017)"></path>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div style="margin-top: 70px;">
+      <section >
+        <div class="grid-container">
+          <div class="grid-item">
+            <h2 class="fw-semibold text-center mb-4">Ultimate information</h2>
+              <div class="container ps-0">
+                 <div class="row total-number mt-5">
+                    <div class="col-7">
+                      <p>Total project's number:</p>
+                    </div>
+                    <div class="col-5">
+                      <p style="margin-left: -5px;">{{ total_projects|length }}</p>
+                    </div>
+                 </div>
+                 <div class="row completed-number">
+                  <div class="col-7">
+                    <p>Number of completed projects:</p>
+                  </div>
+                  <div class="col-5">
+                    <p style="margin-left: -5px;">{{ completed_projects_number }}</p>
+                  </div>
+                 </div>
+                 <div class="row average-progress">
+                   <div class="row align-items-center">
+                  <div class="col-7">
+                    <p>Average progress on uncompleted projects:</p>
+                  </div>
+                  <div class="col-5">
+                    <td class="col-lg-3">
+                      <div class="first-progress-wrapper ms-2">
+                        <div class="progress-info">
+                          <div class="progress-percentage">
+                            <span class="text-xs text-primary font-weight-bold">{{ average_progress_uncompleted|floatformat:2}}%</span>
+                          </div>
+                        </div>
+                        <div class="progress-bar-custom">
+                          <div class="custom-progress-primary">
+                            <div class="progress-bar bg-gradient-primary w-{{ average_progress_uncompleted }}" role="progressbar" aria-valuenow="{{ average_progress_uncompleted }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ average_progress_uncompleted }}%; height: 100%;"></div>
+                        </div>
+                      </div>
+                    </div>
+                   </td>
+                  </div>
+                 </div>
+                   </div>
+                 <div class="row budget-completed">
+                  <div class="row align-items-center">
+                  <div class="col-7 progress-info-supplemental">
+                    <p>Gross budget status for completed projects:</p>
+                  </div>
+                  <div class="col-5 progress-bar-supplemental">
+                    <td class="col-lg-3">
+                      <div class="second-progress-wrapper ms-2">
+                        <div class="progress-info">
+                          <div class="progress-percentage">
+                            <span class="text-xs text-primary font-weight-bold">
+                              {{ predominant_status_completed }} {{ average_percent_completed|floatformat:2}}%
+                              <br>
+                              of consolidated budget
+                            </span>
+                          </div>
+                        </div>
+                        <div class="custom-progress-tertiary">
+                          <div class="progress-bar bg-gradient-primary w-{{ average_percent_completed|floatformat:2 }}" role="progressbar" aria-valuenow="{{ average_percent_completed|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ average_percent_completed|floatformat:2 }}%; height: 100%;"></div>
+                        </div>
+                      </div>
+                    </td>
+                   </div>
+                 </div>
+                </div>
+                 <div class="row">
+                   <div class="row align-items-center">
+                   <div class="col-7">
+                    <p>Gross budget status for uncompleted projects:</p>
+                  </div>
+                  <div class="col-5 mt-n2">
+                    <td class="col-lg-3">
+                      <div class="second-progress-wrapper ms-2">
+                        <div class="progress-info">
+                          <div class="progress-percentage">
+                            <span class="text-xs text-primary font-weight-bold">
+                              {{ predominant_status_uncompleted }} {{ average_percent_uncompleted|floatformat:2}}%
+                              <br>
+                              of consolidated budget
+                            </span>
+                          </div>
+                        </div>
+                        <div class="progress-bar-custom mb-4">
+                          <div class="custom-progress-tertiary">
+                            <div class="progress-bar bg-gradient-primary w-{{ average_percent_uncompleted|floatformat:2 }}" role="progressbar" aria-valuenow="{{ average_percent_uncompleted|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ average_percent_uncompleted|floatformat:2 }}%; height: 100%;"></div>
+                        </div>
+                      </div>
+                     </div>
+                    </td>
+                  </div>
+                 </div>
+                   </div>
+             </div>
+            <div style="margin-top: 20px; flex:1; width: 100%">
+              <a class="nav-link nav-link-icon me-4 ms-3" style="padding-left: 10px" href="{% url 'workflow_organizer:project-create' %}" target="_blank">
+                <button style=" width: 100%; height: 50px; float: right; background-color: #027cc7; border: 1px solid rgba(60, 199, 255, .2); font-size: 20px; padding: 3px 10px; color: white; margin: 0 2px" type="button" class="btn btn-primary btn-lg fw-semibold">Create new project</button>
+              </a>
+            </div>
+          </div>
+          <div class="grid-item">
+            <h2 class="fw-semibold text-center mb-5">Progress</h2>
+              {% for project in total_projects %}
+                <div class="container">
+                  <div class="row align-items-center" style="margin-bottom: 25px;">
+                    <div class="col-7 pt-2 ps-0">
+                      <span style="font-weight: normal;">{{ project.name }}</span>
+                    </div>
+                    <div class="col-5 pt-2">
+                     <div class="d-flex align-items-center">
+                        <div class="progress-wrapper ms-2">
+                          <div class="custom-progress">
+                            <div class="custom-progress-bar bg-gradient-primary w-{{ project.get_project_progress }}" role="progressbar" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ project.progress }}%;"></div>
+                          </div>
+                        </div>
+                        <div class="progress-values text-left" style="position: relative; top: -15px; margin-left: -210px;">
+                          <span class="text-xs text-primary font-weight-bold">{{ project.get_project_progress }}%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+             </div>
+          <div class="grid-item">
+            <h2 class="text-center mb-5 fw-semibold">Time Constraints</h2>
+              {% for project in total_projects %}
+                <div class="container">
+                   <div class="row">
+                     <div class="col-8 ps-0">
+                      <p>{{ project.name }}:</p>
+                     </div>
+                     <div class="col-4 ps-5">
+                        <p>{{ project.time_constraints }}</p>
+                     </div>
+                   </div>
+                </div>
+              {% endfor %}
+          </div>
+          <div class="grid-item">
+            <h2 class="text-center mb-5 fw-semibold" style="margin-bottom: 15px;">Funds</h2>
+            {% for project in total_projects %}
+              <div class="container">
+               <div class="row">
+                  <div class="col-8 ps-0">
+                    <p>{{ project.name }}:</p>
+                  </div>
+                  <div class="col-4 ps-5">
+                    <p>${{ project.budget }}</p>
+                  </div>
+               </div>
+             </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      <div style="height: 40px;"></div>
+      <div class="position-absolute w-100 bottom-0">
+        <svg width="100%" viewBox="0 -1 1920 166" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <title>wave-up</title>
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="Artboard" transform="translate(0.000000, 5.000000)" fill="#FFFFFF" fill-rule="nonzero">
+              <g id="wave-up" transform="translate(0.000000, -5.000000)">
+                <path d="M0,70 C298.666667,105.333333 618.666667,95 960,39 C1301.33333,-17 1621.33333,-11.3333333 1920,56 L1920,165 L0,165 L0,70 Z" id="Path" fill="#fff"></path>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+     </div>
+     <div style="height: 80px;"></div>
+      <div class="position-absolute w-100 bottom-0">
+        <svg width="100%" viewBox="0 -1 1920 166" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <title>wave-up</title>
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="Artboard" transform="translate(0.000000, 5.000000)" fill="#FFFFFF" fill-rule="nonzero">
+              <g id="wave-up" transform="translate(0.000000, -5.000000)">
+                <path d="M0,70 C298.666667,105.333333 618.666667,95 960,39 C1301.33333,-17 1621.33333,-11.3333333 1920,56 L1920,165 L0,165 L0,70 Z" id="Path" fill="#fff"></path>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </section>
+  </body>
+</html>
+
+{% endblock content %}

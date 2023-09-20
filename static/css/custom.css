@@ -1,0 +1,35 @@
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
+
+/* Базовый размер шрифта для body */
+/*body {*/
+/*  font-size: 16px;*/
+/*}*/
+
+/* Цвет текста по умолчанию */
+body {
+  color: #333;
+}
+
+ /*Размер и цвет заголовков */
+h1, h2, h3 {
+  color: #007bff !important;
+}
+
+/*h1 {*/
+/*  font-size: 36px;*/
+/*}*/
+
+/*h2 {*/
+/*  font-size: 32px;*/
+/*}*/
+
+.btn-primary {
+  background-color: #333;
+  border-color: #333;
+}
+
+.border-bottom {
+  border-bottom: 2px solid red;
+}

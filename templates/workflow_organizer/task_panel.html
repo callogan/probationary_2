@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css_additional %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/task_panel.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'fonts/task_panel.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+{% endblock %}
+
+{% block title %} Task Panel {% endblock %}
+
+{% block content %}
+{% include "includes/sidebar.html" %}
+<div class="container-fluid custom-margin-top custom-margin-bottom mt-5">
+  <div class="row">
+    <section class="pt-sm-7 pt-5 pb-0 position-relative bg-white overflow-hidden mt-4">
+      <span class="mask bg-light opacity-2"></span>
+      <div style="width:100%" class="container">
+        <div class="row">
+          <div class="container mt-6 mb-4 text-center mx-auto">
+            <h2 class="h1 mb-2 text-primary font-weight-bold">Task panel</h2>
+            {% if user.tasks.all %}
+                <p class="lead fw-semibold" style="margin-bottom: 0.01rem; font-size: 23px">Track down your task dynamic and details</p>
+            {% else %}
+                <p class="lead fw-semibold" style="font-size: 23px">No existing tasks!</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<section class="pt-sm-8 pb-5 mt-n3 position-relative bg-gradient-yellow overflow-hidden">
+  <div class="position-absolute w-100 z-inde-1 top-0 mt-n3">
+    <svg width="100%" viewBox="0 -2 1920 157" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <title>wave-down</title>
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" fill="#FFFFFF" fill-rule="nonzero">
+          <g id="wave-down">
+            <path d="M0,60.8320331 C299.333333,115.127115 618.333333,111.165365 959,47.8320321 C1299.66667,-15.5013009 1620.66667,-15.2062179 1920,47.8320331 L1920,156.389409 L0,156.389409 L0,60.8320331 Z" id="Path-Copy-2" transform="translate(960.000000, 78.416017) rotate(180.000000) translate(-960.000000, -78.416017)"></path>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="container-fluid">
+    <div style="width: 100%; padding-left: 190px" class="mb-3 d-flex align-items-center">
+      <label class="p me-2" style="font-size: 20px; padding-top: 5px;">Tags:</label>
+      {% for tag in tags %}
+        <a
+          style="background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size: 12px; height: 22px; padding: 3px 3px; margin: 0 3px;"
+          class="btn button-sm text-white shadow-info fw-semibold"
+          href="{% url 'workflow_organizer:task-panel' %}?tag={{ tag.name | urlencode }}"
+        >
+          {{ tag.name }}
+        </a>
+      {% endfor %}
+    </div>
+    <div style="width: 80%" class="container">
+      <div class="row widget-row justify-center">
+        <div class="col-md-4 col-4 d-flex flex-column">
+          <div style="width:100%; background-color: #fe000b; border: 1px solid #FF007F; border-radius: 20px; box-shadow: 0 2px 12px 0 rgba(255, 0, 127, 0.16); padding:0 0 20px 0">
+            <div class="row">
+              <div class="col-7">
+                <div style="width:100%; box-shadow: none; border:none; margin-left: 5px;"
+                class="btn btn-primary h-1 px-2 pt-4 bg-transparent">
+                  <h5 style="color: black;" class="ps-2 h4 font-weight-bold me-9 text-left">QUEUE</h5>
+                </div>
+              </div>
+              <div class="pt-3 col-5" style="padding-left: 30px">
+                <span style="background-color: #ffb41d; width:34px; height:30px;"
+                   class="badge text-black ms-6">{{ queue_tasks.count }}</span>
+              </div>
+            </div>
+            {% for task in queue_tasks %}
+              <div class="col-md-4 mt-3 widget-col w-100" style="margin-bottom: 0;">
+                  <div style="width:90%" class="card mt-1 mb-3 mx-auto">
+                     <div class="card shadow-info" style="height: 250px;">
+                        <div style="height: 0; min-height: auto;" class="mb-2 card-header d-flex flex-fill align-items-center">
+                         <a href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none;">
+                           <div style="flex: 1;">
+                              <span class="text-primary fst-italic">#{{ task.task_type.name }}</span>
+                           </div>
+                         </a>
+                          <div style="margin-top: 0.00001rem; flex:1">
+                            {% if task.tags.all %}
+                              {% if task.tags_remained > 0 %}
+                                <div class="dropdown">
+                                  <button class="btn button-sm mx-n0 mb-1 dropdown-toggle fw-semibold" type="button" id="task-tag-dropdown-{{ task.id }}" data-bs-toggle="dropdown" aria-expanded="false" style="float: right; background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size:10px; height:22px; padding:3px 10px; color: white; margin: 0 2px">
+                                    +{{ task.tags_remained }}
+                                  </button>
+                                  <ul class="dropdown-menu px-2 py-3" aria-labelledby="task-tag-dropdown-{{ task.id }}">
+                                    {% for tag in task.tags.all|slice:"1:" %}
+                                    <li style="margin-bottom: 5px;">
+                                      <a
+                                        style="background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size: 10px; height: 22px; padding: 3px 3px; margin: 0 3px;"
+                                        class="btn button-sm text-white shadow-info dropdown-item fw-semibold"
+                                        href="{% url 'workflow_organizer:task-detail' pk=task.id %}"
+                                      >
+                                        {{ tag.name }}
+                                      </a>
+                                    </li>
+                                    {% endfor %}
+                                  </ul>
+                                </div>
+                              {% endif %}
+                              {% for tag in task.tags.all|slice:":1" %}
+                                <a href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none;">
+                                  <button style="float: right; background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size:10px; height:22px; padding:3px 10px; color: white" class="btn button-sm mx-n0 mb-1 fw-semibold">{{ tag.name }}</button>
+                                </a>
+                              {% endfor %}
+                            {% endif %}
+                          </div>
+                        </div>
+                        <a href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none;">
+                          <div style="height: 100px" class="card-body mt-5 d-flex align-items-center">
+                            <h5 class="h5 text-center mx-auto" style="margin-top: 0; margin-bottom: 20px; padding-bottom: 30px;"> {{ task.name }}</h5>
+                          </div>
+                        </a>
+                        <div style="height: 10px;" class="card-footer d-flex flex-fill align-items-center">
+                          <p style="margin: 0 0 0 0" class="text-muted text-sm text-center text-left"><i>
+                            {% if task.time_constraints %}
+                              {{ task.time_constraints }}
+                            {% else %}
+                              No time constraints specified.
+                            {% endif %}
+                          </i></p>
+                          <div style="margin-top: 5px; flex: 1; width: 50px; height: 50px;" class="avatar-group d-flex justify-content-end">
+                            {% for assignee in task.assignees.all %}
+                              <a href="{% url 'workflow_organizer:worker-detail' pk=assignee.id %}"
+                                 class="avatar avatar-sm rounded-circle"
+                                 data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                 style="border-radius: 50%; overflow: hidden;">
+                                 <img src="{% static 'img/team/'|add:assignee.username|add:'.jpeg' %}">
+                              </a>
+                            {% endfor %}
+                          </div>
+                        </div>
+                     </div>
+                  </div>
+              </div>
+            {% endfor %}
+            <div style="margin-top: 10px; flex:1; width: 100%">
+              <a class="nav-link nav-link-icon me-4 ms-3" style="padding-left: 10px" href="{% url 'workflow_organizer:task-create' %}" target="_blank">
+                <button style=" width: 100%; height: 50px; float: right; background-color: rgba(58, 198, 255, .6); border: 1px solid rgba(60, 199, 255, .2); font-size: 20px; padding: 3px 10px; color: white; margin: 0 2px" type="button" class="btn btn-primary btn-lg">+ Add new task</button>
+              </a>
+            </div>
+          </div>
+        </div>
+        <section class="col-md-4 col-4 d-flex flex-column">
+          <div style="width:100%; background-color: #648c1c; border: 1px solid #FF007F; border-radius: 20px; box-shadow: 0 2px 12px 0 rgba(255, 0, 127, 0.16); padding:0 0 20px 0">
+            <div class="row">
+              <div class="col-7">
+                <div style="width:100%; box-shadow: none; border:none; margin-left: 5px;"
+                  class="btn btn-primary h-1 px-2 pt-4 bg-transparent">
+                  <h5 style="color: black;" class="ps-2 h4 font-weight-bold me-9">UNDERWAY</h5>
+                </div>
+              </div>
+            <div class="pt-3 col-5" style="padding-left: 30px">
+              <span style="background-color: #ffb41d; width:34px; height:30px;"
+                  class="badge text-black ms-6">{{ underway_tasks.count }}</span>
+            </div>
+          </div>
+          {% for task in underway_tasks %}
+            <div class="col-md-4 mt-3 widget-col w-100" style="margin-bottom: 0;">
+              <div style="width:90%" class="card mt-1 mb-3 mx-auto">
+                <div class="card shadow-info text-decoration-none" style="height: 250px;">
+                  <div style="height: 0; min-height: auto;" class="mb-2 card-header d-flex flex-fill align-items-center">
+                    <a href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none;">
+                    <div style="flex: 1;">
+                      <span class="text-primary fst-italic">#{{ task.task_type.name }}</span>
+                    </div>
+                    </a>
+                    <div style="margin-top: 0.00001rem; flex:1">
+                      {% if task.tags.all %}
+                        {% if task.tags_remained > 0 %}
+                          <div class="dropdown">
+                            <button class="btn button-sm mx-n0 mb-1 dropdown-toggle fw-semibold" type="button" id="task-tag-dropdown-{{ task.id }}" data-bs-toggle="dropdown" aria-expanded="false" style="float: right; background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size:10px; height:22px; padding:3px 10px; color: white; margin: 0 2px">
+                              +{{ task.tags_remained }}
+                            </button>
+                            <ul class="dropdown-menu px-2 py-3" aria-labelledby="task-tag-dropdown-{{ task.id }}">
+                              {% for tag in task.tags.all|slice:"1:" %}
+                              <li style="margin-bottom: 5px;">
+                                <a
+                                  style="background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size: 10px; height: 22px; padding: 3px 3px; margin: 0 3px;"
+                                  class="btn button-sm text-white shadow-info dropdown-item fw-semibold"
+                                  href="{% url 'workflow_organizer:task-detail' pk=task.id %}"
+                                >
+                                  {{ tag.name }}
+                                </a>
+                              </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        {% endif %}
+                        {% for tag in task.tags.all|slice:":1" %}
+                        <a href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none;">
+                          <button style="float: right; background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size:10px; height:22px; padding:3px 10px; color: white" class="btn button-sm mx-n0 mb-1 fw-semibold">{{ tag.name }}</button>
+                        </a>
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                  </div>
+                  <a href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none;">
+                    <div style="height: 100px" class="card-body mt-5 d-flex align-items-center">
+                      <h5 class="h5 text-center mx-auto" style="margin-top: 0; margin-bottom: 20px; padding-bottom: 30px;"> {{ task.name }}</h5>
+                    </div>
+                  </a>
+                  <div style="height: 10px;" class="card-footer d-flex flex-fill align-items-center">
+                    <p style="margin: 0 0 0 0" class="text-muted text-sm text-center text-left"><i>
+                      {% if task.time_constraints %}
+                        {{ task.time_constraints }}
+                      {% else %}
+                        No time constraints specified.
+                      {% endif %}
+                    </i></p>
+                    <div style="margin-top: 5px; flex: 1; width: 50px; height: 50px;" class="avatar-group d-flex justify-content-end">
+                      {% for assignee in task.assignees.all %}
+                        <a href="{% url 'workflow_organizer:worker-detail' pk=assignee.id %}"
+                           class="avatar avatar-sm rounded-circle"
+                           data-bs-toggle="tooltip" data-bs-placement="bottom"
+                           style="border-radius: 50%; overflow: hidden;">
+                           <img src="{% static 'img/team/'|add:assignee.username|add:'.jpeg' %}"/>
+                        </a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          <div style="margin-top: 10px; flex:1; width: 100%">
+            <a class="nav-link nav-link-icon me-4 ms-3" style="padding-left: 10px" href="{% url 'workflow_organizer:task-create' %}" target="_blank">
+              <button style=" width: 100%; height: 50px; float: right; background-color: rgba(58, 198, 255, .6); border: 1px solid rgba(60, 199, 255, .2); font-size: 20px; padding: 3px 10px; color: white; margin: 0 2px" type="button" class="btn btn-primary btn-lg">+ Add new task</button>
+            </a>
+          </div>
+        </div>
+      </section>
+      <div class="col-md-4 col-4 d-flex flex-column">
+        <div style="width:100%; background-color: #027cc7; border: 1px solid #FF007F; border-radius: 20px; box-shadow: 0 2px 12px 0 rgba(255, 0, 127, 0.16); padding:0 0 20px 0">
+          <div class="row">
+            <div class="col-7">
+              <div style="width:100%; box-shadow: none; border:none; margin-left: 5px;"
+                class="btn btn-primary h-1 px-2 pt-4 bg-transparent">
+                <h5 style="color: black;" class="ps-2 h4 font-weight-bold me-9">COMPLETED</h5>
+              </div>
+            </div>
+          <div class="pt-3 col-5" style="padding-left: 30px">
+            <span style="background-color: #ffb41d; width:34px; height:30px;"
+                class="badge text-black ms-6">{{ completed_tasks.count }}</span>
+          </div>
+        </div>
+        {% for task in completed_tasks %}
+          <div class="col-md-4 mt-3 widget-col w-100" style="margin-bottom: 0;">
+            <div style="width:90%" class="card mt-1 mb-3 mx-auto">
+              <div class="card shadow-info" style="height: 250px;">
+                <div style="height: 0; min-height: auto;" class="mb-2 card-header d-flex flex-fill align-items-center">
+                  <a href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none;">
+                    <div style="flex: 1;">
+                      <span class="text-primary fst-italic">#{{ task.task_type.name }}</span>
+                    </div>
+                  </a>
+                  <div style="margin-top: 0.00001rem; flex:1">
+                  {% if task.tags.all %}
+                    {% if task.tags_remained > 0 %}
+                      <div class="dropdown">
+                        <button class="btn button-sm mx-n0 mb-1 dropdown-toggle fw-semibold" type="button" id="task-tag-dropdown-{{ task.id }}" data-bs-toggle="dropdown" aria-expanded="false" style="float: right; background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size:10px; height:22px; padding:3px 10px; color: white; margin: 0 2px">
+                          +{{ task.tags_remained }}
+                        </button>
+                        <ul class="dropdown-menu px-2 py-3" aria-labelledby="task-tag-dropdown-{{ task.id }}">
+                          {% for tag in task.tags.all|slice:"1:" %}
+                          <li style="margin-bottom: 5px;">
+                            <a
+                              style="background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size: 10px; height: 22px; padding: 3px 3px; margin: 0 3px;"
+                              class="btn button-sm text-white shadow-info dropdown-item fw-semibold"
+                              href="{% url 'workflow_organizer:task-detail' pk=task.id %}"
+                            >
+                              {{ tag.name }}
+                            </a>
+                          </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    {% endif %}
+                    {% for tag in task.tags.all|slice:":1" %}
+                    <a href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none;">
+                      <button style="float: right; background-color: rgb(2, 124, 199); border: 1px solid rgba(60, 199, 255, .2); font-size:10px; height:22px; padding:3px 10px; color: white" class="btn button-sm mx-n0 mb-1 fw-semibold">{{ tag.name }}</button>
+                    </a>
+                    {% endfor %}
+                  {% endif %}
+                </div>
+              </div>
+              <a href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none;">
+                <div style="height: 100px;" class="card-body mt-5 d-flex align-items-center">
+                  <h5 class="h5 text-center mx-auto" style="margin-top: 0; margin-bottom: 20px; padding-bottom: 30px;"> {{ task.name }}</h5>
+                </div>
+              </a>
+              <div style="height: 10px;" class="card-footer d-flex flex-fill align-items-center">
+                <p style="margin: 0 0 0 0" class="text-muted text-sm text-center text-left"><i>
+                  {% if task.time_constraints %}
+                    {{ task.time_constraints }}
+                  {% else %}
+                    No time constraints specified.
+                  {% endif %}
+                </i></p>
+                <div style="margin-top: 5px; flex: 1; width: 50px; height: 50px;" class="avatar-group d-flex justify-content-end">
+                  {% for assignee in task.assignees.all %}
+                    <a href="{% url 'workflow_organizer:worker-detail' pk=assignee.id %}"
+                       class="avatar avatar-sm rounded-circle"
+                       data-bs-toggle="tooltip" data-bs-placement="bottom"
+                       style="border-radius: 50%; overflow: hidden;">
+                       <img src="{% static 'img/team/'|add:assignee.username|add:'.jpeg' %}">
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        <div style="margin-top: 10px; flex:1; width: 100%">
+          <a class="nav-link nav-link-icon me-4 ms-3" style="padding-left: 10px" href="{% url 'workflow_organizer:task-create' %}" target="_blank">
+            <button style=" width: 100%; height: 50px; float: right; background-color: rgba(58, 198, 255, .6); border: 1px solid rgba(60, 199, 255, .2); font-size: 20px; padding: 3px 10px; color: white; margin: 0 2px" type="button" class="btn btn-primary btn-lg">+ Add new task</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+<div style="height: 140px;"></div>
+  <div class="position-absolute w-100 bottom-0">
+    <svg width="100%" viewBox="0 -1 1920 166" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <title>wave-up</title>
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(0.000000, 5.000000)" fill="#FFFFFF" fill-rule="nonzero">
+          <g id="wave-up" transform="translate(0.000000, -5.000000)">
+            <path d="M0,70 C298.666667,105.333333 618.666667,95 960,39 C1301.33333,-17 1621.33333,-11.3333333 1920,56 L1920,165 L0,165 L0,70 Z" id="Path" fill="#fff"></path>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </div>
+</section>
+</div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,115 @@
+{% load static %}
+
+{% block css_additional %}
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+{% endblock %}
+
+  <div class="container position-sticky z-index-sticky top-1" style="width: 100%">
+    <div class="row">
+      <div class="col-12">
+        <nav class="navbar navbar-expand-lg  blur blur-rounded top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
+          <div class="container-fluid px-0">
+            <a class="navbar-brand font-weight-bolder ms-sm-3 fs-5" href="/" rel="tooltip" data-placement="bottom">
+              Assignments monitoring and tackling system
+            </a>
+            <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon mt-2">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </span>
+            </button>
+            <div class="collapse navbar-collapse pt-3 pb-2 py-lg-0 w-100 " id="navigation">
+              <ul class="navbar-nav navbar-nav-hover ms-auto align-items-center">
+                {% if user.is_authenticated %}
+                  <li class="nav-item dropdown dropdown-hover mx-1">
+                    <a class="nav-link font-weight-bolder ps-2 d-flex cursor-pointer align-items-center fs-7"
+                       href="{% url 'workflow_organizer:task-panel' %}">
+                      Task panel
+                    </a>
+                  </li>
+                  <li class="nav-item ms-lg-auto">
+                    <a class="nav-link nav-link-icon me-4 ms-3" href="{% url 'workflow_organizer:project-tracking-panel' %}" target="_blank">
+                     <p class="d-inline text-sm z-index-1 font-weight-bolder fs-7" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Get Sources">Project tracking panel</p>
+                    </a>
+                  </li>
+                  <li class="nav-item dropdown dropdown-hover mx-1">
+                    <a class="nav-link font-weight-bolder ps-2 d-flex cursor-pointer align-items-center fs-7" id="dropdownMenuDocs" data-bs-toggle="dropdown" aria-expanded="false">
+                      Parameters' management
+                      <i class="fa fa-chevron-down ms-1 fa-xs"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive mt-0 mt-lg-3 p-3 border-radius-lg" aria-labelledby="dropdownMenuDocs">
+                      <div class="d-none d-lg-block">
+                        <ul class="list-group">
+                          <li class="nav-item list-group-item border-0 p-0">
+                            <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:task-type-list' %}">
+                              <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Task type management</h6>
+                              <span class="regular-font-type text-sm">Set up or edit task types</span>
+                            </a>
+                          </li>
+                          <li class="nav-item list-group-item border-0 p-0">
+                            <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:project-category-list' %}">
+                              <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Project categories management</h6>
+                              <span class="regular-font-type text-sm">Create or rearrange project categories</span>
+                            </a>
+                          </li>
+                          <li class="nav-item list-group-item border-0 p-0">
+                            <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:position-list' %}">
+                              <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Positions management</h6>
+                              <span class="regular-font-type text-sm">Look over or edit positions</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </ul>
+                  </li>
+                {% endif %}
+                <li class="nav-item ms-lg-auto">
+                  <a class="nav-link nav-link-icon me-4 ms-3" href="{% url 'workflow_organizer:dashboard' %}" target="_blank">
+                    <p class="d-inline text-sm z-index-1 font-weight-bolder fs-7" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Get Sources">Dashboard</p>
+                  </a>
+                </li>
+                  {% if user.is_authenticated %}
+                     <li class="nav-item ms-lg-auto">
+                      <a class="nav-link nav-link-icon me-2"
+                        href="{% url 'workflow_organizer:worker-detail' pk=user.id %}">
+                        <img class="avatar avatar-sm my-0 rounded-circle" style="object-fit: cover;" src="{% static 'img/team/'|add:user.username|add:'.jpeg' %}">
+                      </a>
+                    </li>
+                    <li class="nav-item dropdown ms-lg-auto">
+                      <a class="nav-link dropdown-toggle d-flex cursor-pointer align-items-center text-primary" id="userDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="me-2">{{ user.username }}</span>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-end mt-0 mt-lg-3 p-3 border-radius-lg" aria-labelledby="userDropdown">
+                        <a class="dropdown-item py-2 ps-3 border-radius-md" href="{% url 'workflow_organizer:worker-detail' pk=user.id %}">
+                          <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">Personal Information</h6>
+                        </a>
+                        <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:workers-list' %}">
+                          <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">Rating status</h6>
+                        </a>
+                        <a class="dropdown-item py-2 ps-3 border-radius-md" href="{% url 'logout' %}">
+                          <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                            <i class="fa fa-sign-out me-2" aria-hidden="true"></i>Log Out
+                          </h6>
+                        </a>
+                      </div>
+                    </li>
+                  {% else %}
+                    <li class="nav-item ms-lg-auto">
+                      <a class="nav-link nav-link-icon me-2"
+                        href="{% url 'login' %}">
+                        <i class="fa fa-sign-in me-1"></i>
+                        <p class="d-inline text-sm z-index-1 font-weight-bold" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sign In">Login</p>
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </nav>
+          <!-- End Navbar -->
+        </div>
+      </div>
+    </div>

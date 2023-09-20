@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} {{ team.name }} {% endblock %}
+
+<style>
+.custom-svg-style {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: -1;
+}
+.mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+</style>
+
+
+{% block content %}
+  {% include 'includes/sidebar.html' %}
+
+  <div class="mt-9">
+    <div class="row mb-5 mb-lg-3 mx-n12 py-4 text-center">
+      <div class="col-12 col-md-9 col-lg-8 text-center mx-auto">
+        <h2 style="color:blue; text-transform: capitalize;" class="h1 text-center font-weight-bolder">{{ team.name }}</h2>
+        <p class="text-center text-dark lead fw-semibold" style="font-size: 23px">It is an arena there is your team is present</p>
+      </div>
+    </div>
+  </div>
+  <section class="pt-sm-8 pb-5 mt-n6 position-relative bg-gradient-blue overflow-hidden">
+    <div class="position-absolute w-100 z-inde-1 top-0 mt-n3">
+      <svg width="100%" viewBox="0 -2 1920 157" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <title>wave-down</title>
+        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+          <g id="Artboard" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="wave-down">
+              <path d="M0,60.8320331 C299.333333,115.127115 618.333333,111.165365 959,47.8320321 C1299.66667,-15.5013009 1620.66667,-15.2062179 1920,47.8320331 L1920,156.389409 L0,156.389409 L0,60.8320331 Z" id="Path-Copy-2" transform="translate(960.000000, 78.416017) rotate(180.000000) translate(-960.000000, -78.416017)"></path>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <section class="section section-lg col-lg-11 mx-auto mt-n10 d-flex justify-content-center align-items-center">
+      <div class="container mx-5">
+        <div class="row mb-5 mb-lg-3 mx-n12 py-4">
+          <div class="col-12 col-md-9 col-lg-8 text-center mx-auto ">
+            <h2 style="color:blue" class="h1 text-left">{{ team.name }}</h2>
+            <p class="text-center text-dark lead">It is an arena there is your team is present</p>
+          </div>
+        </div>
+          {% if team.workers %}
+            <div class="row">
+              {% for worker in team.workers.all %}
+                <div class="col-lg-6 mt-5">
+                  <div class="card card-profile shadow-primary h-100 mt-2" style="background-color: #f5f5dc">
+                    <div class="row">
+                      <div class="col-lg-4 col-md-6  mt-n5">
+                        <a href="{% url 'workflow_organizer:worker-detail' pk=user.id %}">
+                          <div class="p-3 pe-md-0">
+                            <img
+                                class="mt-n2 ms-1" style="border-radius: 50% !important; width: 200px; height: 200px; object-fit: cover; border: none;"
+                                src="{% static 'img/team/'|add:worker.username|add:'.jpeg' %}"
+                                alt="{{ worker.first_name }} {{ worker.last_name }}">
+                          </div>
+                        </a>
+                      </div>
+                      <div class="col-lg-8 col-md-6 col-12 my-auto">
+                        <div class="card-body ps-lg-0">
+                          <h5 class="mb-0" style="margin: 0; padding-left: 10px;">{{ worker.first_name }} {{ worker.last_name }}</h5>
+                          <a href="{% url 'workflow_organizer:position-list' %}" class="text-decoration-none text-primary" style="padding-left: 10px;"><i>#{{ worker.position.name }}</i></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p>No members in your team! </p>
+          {% endif %}
+          <div class="row my-6 mx-4">
+            <div class="col-lg-12 col-md-6 mb-md-0 mb-4">
+              <div style="background-color: #ffb41d; border-radius: 20px; " class="card pb-4 shadow-primary">
+                <div class="card-header pb-0 text-center"> <!-- Center the header -->
+                  <div class="row">
+                    <div class="col-lg-12 col-12"> <!-- Center the badge -->
+                      <div style="display: inline-flex; padding-right: 10px;">
+                        <h5 style="color: rgb(2, 124, 199); font-size: 25px; font-weight: bold; padding:0 10px;">TEAM'S PROJECTS</h5>
+                        <p class="text-sm mb-0">
+                          <span style="background-color: rgb(2, 124, 199); color: #ffb41d; font-size: 14px; width: 34px; height: 30px;" class="badge mt-auto">{{ team.projects.count  }}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body px-0 pb-2">
+                  <div class="table-responsive">
+                    <table class="table align-items-center mb-0">
+                      <thead>
+                        <tr>
+                          <th class="text-uppercase text-dark text-center text-xxs font-weight-bolder opacity-8">Name</th>
+                          <th class="text-uppercase text-dark text-xxs text-center font-weight-bolder opacity-8 ps-2">Budget</th>
+                          <th class="text-center text-uppercase text-dark text-xxs font-weight-bolder opacity-8">Time constraints</th>
+                          <th class="text-center text-uppercase text-dark text-xxs font-weight-bolder opacity-8">Completion</th>
+                          <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-8 ps-2"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for project in team.projects.all %}
+                          <tr>
+                          <td>
+                            <div class="d-flex px-2 py-1">
+                              <div class="d-flex flex-column justify-content-center mx-3">
+                                <h6 class="mb-0 text-sm text-dar fw-semibold">{{ project.name }}</h6>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="text-center text-dark text-sm">
+                            <span class="text-xs fw-semibold text-dark ms-auto"> {{ project.budget }}$ </span>
+                          </td>
+                          <td class="align-middle text-center text-dark text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                              <path fill="red" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                              <path fill="red" d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                            </svg>
+                            <span class="text-xs font-weight-bold text-dark"> {{ project.time_constraints }} </span>
+                          </td>
+                          <td class="align-middle progress-container">
+                            <div class="progress-wrapper w-75 mx-auto">
+                              <div class="progress-info">
+                                <div class="progress-percentage">
+                                  <span class="text-xs text-dark font-weight-bold">{{ project.progress }}%</span>
+                                </div>
+                              </div>
+                              <div class="custom-progress-inner">
+                                <div class="progress-bar bg-gradient-primary w-{{ project.progress }}" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ project.progress }}%;"></div>
+                              </div>
+                            </div>
+                          </td>
+                         </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     </div>
+    </section>
+    <div style="height: 40px;"></div>
+      <div class="position-absolute w-100 bottom-0">
+        <svg width="100%" viewBox="0 -1 1920 166" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <title>wave-up</title>
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="Artboard" transform="translate(0.000000, 5.000000)" fill="#FFFFFF" fill-rule="nonzero">
+              <g id="wave-up" transform="translate(0.000000, -5.000000)">
+                <path d="M0,70 C298.666667,105.333333 618.666667,95 960,39 C1301.33333,-17 1621.33333,-11.3333333 1920,56 L1920,165 L0,165 L0,70 Z" id="Path" fill="#fff"></path>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+  </section>
+
+
+{% endblock content %}

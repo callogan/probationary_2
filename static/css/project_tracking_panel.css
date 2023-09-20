@@ -1,0 +1,168 @@
+/*body {*/
+/*    margin: 20px 200px 30px 200px;*/
+/*}*/
+
+body {
+    overflow-x: hidden;
+}
+
+/*.parental-widget {*/
+/*  padding: 20px 140px 30px 140px;*/
+/*}*/
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border: 1px solid #FFC0CB;
+  border-radius: 20px;
+  box-shadow: 0 2px 12px 0 rgba(255, 0, 127, 0.16);
+  padding: 0;
+  margin: 20px 160px 30px 160px;
+  overflow: hidden;
+}
+
+.grid-item {
+  text-align: left;
+  font-size: 18px;
+  font-weight: 700;
+  border: 1px rgb(194, 192, 194) solid;
+  padding: 20px;
+  border-collapse: collapse;
+}
+
+.h2 {
+    text-align: center;
+    font-size: 50px;
+}
+
+.progress-bar {
+  margin: 0;
+}
+
+.custom-progress {
+  width: 210px;
+  height: 5px;
+  margin-top: 9px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.custom-progress-primary {
+  width: 230px;
+  height: 5px;
+  margin-top: 9px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.custom-progress-secondary {
+  width: 230px;
+  height: 7px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.custom-progress-tertiary {
+  width: 230px;
+  height: 5px;
+  margin-top: 9px;
+  background-color: #fff;
+  border-radius: 10px;
+  position: relative;
+}
+
+.progress-bar-custom .progress {
+  width: 165px;
+  height: 5px;
+}
+
+.custom-progress-bar {
+  height: 100%;
+  background-color: blue;
+  border-radius: 4px;
+}
+
+.custom-progress-bar:before {
+  margin-top: -1px;
+}
+
+.custom-progress-bar:after {
+  margin-bottom: -1px;
+}
+
+.first-progress-wrapper {
+  margin-top: -10px;
+}
+
+.second-progress-wrapper {
+  margin-top: 15px;
+}
+
+.progress-percentage {
+  width: 300px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.row {
+  margin-bottom: 10px;
+}
+
+.col-7, .pt-2, .ps-0 {
+  font-size: 17px;
+}
+
+.grid-container {
+  background-color: #ffb41d;
+}
+
+.progress-percentage {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.progress-percentage span {
+  flex-basis: 100%;
+}
+
+.progress {
+  position: relative;
+}
+
+.progress-bar-custom {
+  margin-top: 5px;
+  position: relative;
+}
+
+.progress-bar-supplemental {
+  margin-bottom: 40px;
+}
+
+.progress-info-supplemental {
+  margin-bottom: 5px;
+}
+
+/*.col-7,*/
+/*.col-5 {*/
+/*  display: inline-block;*/
+/*  vertical-align: middle;*/
+/*}*/
+
+.total-number {
+  margin-bottom: 30px;
+}
+
+.completed-number {
+  margin-bottom: 30px;
+}
+
+.average-progress {
+  margin-bottom: 8px;
+}
+
+.budget-completed {
+  margin-bottom: 1px;
+}

@@ -1,0 +1,458 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+{% include "includes/sidebar.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="{% static 'css/worker_detail.css' %}">
+  <title>Worker's details</title>
+</head>
+
+<body>
+  <style>
+    body {
+      overflow-x: hidden;
+    }
+
+  </style>
+
+    <div class="row">
+    <header>
+      <div class="page-header min-height-400" style="background-image: url({% static 'img/backgrounds/profile.jpeg' %});">
+        <span class="mask bg-gradient-dark opacity-6"></span>
+      </div>
+    </header>
+    </div>
+
+    <div class="container-fluid custom-margin-top custom-margin-bottom">
+      <div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
+        <section >
+          <div class="grid-container" style="margin-top: -15px;">
+             <div class="widget-left" style="width: 285px; height: 200px;">
+               <div class="widget-content" style="width: 700px; min-height: 0; margin-bottom: 20px">
+                 <div class="row">
+                  <div class="col-1">
+                  </div>
+                  <div class="col-1">
+                  </div>
+                  <div class="col-10" style="margin-top: 10px;">
+                    <div class="mt-n8 mt-md-n9 text-center text-muted avatar-sm mt-0 position-relative"
+                    style="transform: scale(6); border-radius: 50%; overflow: hidden; margin-top: -20px;">
+                    <img class="avatar shadow-xl position-relative z-index-2"
+                         style="max-width: 100%; width: 40px; height: 40px; object-fit: cover;"
+                         src="{% static 'img/team/'|add:worker.username|add:'.jpeg' %}">
+                    </div>
+                  </div>
+                </div>
+               </div>
+             </div>
+             <div class="widget-right" style="height: 210px; padding-bottom: 20px">
+                <div class="row pt-1">
+                  <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mx-auto mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2" style="margin-left: -150px; margin-top: -20px; ">
+                      <h3 class="mb-0 font-weight-bold">{{ worker.first_name }} {{ worker.last_name }}</h3>
+                      {% if user.id == worker.id %}
+                        <ul class="list-unstyled">
+                          <li style="box-shadow: 0 0.3125rem 0.625rem 0 rgba(151, 153, 55, 0.32); margin-top: 10px;" class="card dropdown dropdown-hover mx-2" >
+                            <a class="my-2 mx-3 d-flex cursor-pointer align-items-center" id="dropdownMenuDocs" data-bs-toggle="dropdown" aria-expanded="false">
+                              <div style="position: relative;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-menu-button-wide" viewBox="0 0 16 16">
+                                  <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v2A1.5 1.5 0 0 1 14.5 5h-13A1.5 1.5 0 0 1 0 3.5v-2zM1.5 1a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-13z"/>
+                                  <path d="M2 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm10.823.323-.396-.396A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0zM0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2H1zm14-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2h14zM2 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+                                </svg>
+                              </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive mt-0 mt-lg-3 p-3 border-radius-lg" aria-labelledby="dropdownMenuDocs">
+                              <div class="d-none d-lg-block">
+                                <ul class="list-group">
+                                  <li class="nav-item list-group-item border-0 p-0">
+                                    <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:worker-update' pk=worker.id %}">
+                                      <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Edit profile</h6>
+                                    </a>
+                                  </li>
+                                  <li class="nav-item list-group-item border-0 p-0">
+                                    <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:worker-delete' pk=worker.id %}">
+                                      <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Delete profile</h6>
+                                    </a>
+                                  </li>
+                                  {% if user.team %}
+                                    <li class="nav-item list-group-item border-0 p-0">
+                                      <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:team-update' pk=user.team.id %}">
+                                        <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Edit team</h6>
+                                      </a>
+                                    </li>
+                                    <li class="nav-item list-group-item border-0 p-0">
+                                      <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:team-delete' pk=user.team.id %}">
+                                        <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Delete team</h6>
+                                      </a>
+                                    </li>
+                                  {% else %}
+                                    <li class="nav-item list-group-item border-0 p-0">
+                                      <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:team-create'%}">
+                                        <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Create team</h6>
+                                      </a>
+                                    </li>
+                                  {% endif %}
+                                  <li class="nav-item list-group-item border-0 p-0">
+                                    <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:task-create'%}">
+                                      <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Create task</h6>
+                                    </a>
+                                  </li>
+                                  <li class="nav-item list-group-item border-0 p-0">
+                                    <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:project-create'%}">
+                                      <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Create project</h6>
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
+                            </ul>
+                          </li>
+                        </ul>
+                        {% else %}
+                          <div style="height: 70px;"></div>
+                      {% endif %}
+                    </div>
+                    <div class="row mb-3" style="margin-top: -20px">
+                      <div class="col-auto" style="margin-left: -150px; ">
+                        {% if worker.team %}
+                          <a href="{% url 'workflow_organizer:team-detail' pk=worker.team.id %}"
+                             title="{{ worker.team.name }}"
+                             style="text-decoration: none;">
+                            <p style="display: inline">{{ worker.team.name }} team</p>
+                          </a>
+                        {% endif %}
+                      </div>
+                    </div>
+                  <div class="row mb-3">
+                      <div class="col-auto" style="margin-left: -150px; margin-bottom: -20px;">
+                       {% if user.team  and user.id != worker.id %}
+                        <div class="dropdown">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="teamsDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           Accessible teams
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="teamsDropdown">
+                            {% for team in user.team.all %}
+                              <a class="dropdown-item
+                                {% if team in worker.team.all %}text-danger{% else %}text-primary{% endif %}"
+                                href="{% url 'toggle-team' pk=worker.id team_id=team.id %}">
+                                {{ team.name }}
+                              </a>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% endif %}
+                      </div>
+                    </div>
+                    <div class="row mb-0">
+                      <div class="col-auto" style="margin-left: -150px">
+                        <span class="mb-0"><i>#{{ worker.position.name }}</i></span>
+                      </div>
+                    </div>
+                    <p class="text-lg mb-0" style="margin-left: -150px">{{ worker.email }}</p>
+                  </div>
+                </div>
+             </div>
+          <div class="widget-full-width">
+            <div class="row mb-4" style="width: 1200px">
+              <div class="col-3">
+                <div class="header mb-2 text-center">
+                  <span class="h6">{{ worker.rating_points }}</span>
+                  <span>Rating Points</span>
+                </div>
+                <div class="body">
+                 {% if user.team == worker.team or has_common_task %}
+                  <form method="post" action="{% url 'workflow_organizer:worker-detail' pk=worker.id %}">
+                    {% csrf_token %}
+                    <a class="dropdown-item py-2 ps-3 border-radius-md btn btn-danger text-white rating-update-button" href="#" style="background-color: rgba(2, 124, 199, 0.8);">
+                      <h6 class="dropdown-header font-weight-bolder d-flex justify-content-center align-items-center p-0" style="width: 100%;">Rating Points Update</h6>
+                    </a>
+                    <div class="rating-form" style="display: none;">
+                      {{ form }}
+                      <input type="submit" value="Submit"/>
+                    </div>
+                  </form>
+                 <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                      const ratingButton = document.querySelector(".rating-update-button");
+                      const ratingForm = document.querySelector(".rating-form");
+
+                      ratingButton.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        ratingForm.style.display = "block";
+                      });
+                    });
+                 </script>
+                {% endif %}
+               </div>
+              </div>
+              <div class="col-2 text-center ">
+                <span class="h6">{{ worker.tasks.count }}</span>
+                <span>Tasks</span>
+              </div>
+              <div class="col-2 text-center">
+                <span class="h6">{{ worker.finished_tasks.count }}</span>
+                <span>Finished Tasks</span>
+              </div>
+            </div>
+            <div class="widget-full-width" style="width: 1200px;">
+              <div class="d-flex justify-content-between align-items-center mb-2" style="margin-right: 125px">
+                <h3 class="mb-2 mx-auto text-center text-muted font-weight-bold">
+                  Check {% if user.id == worker.id %} my {% else %} {{ worker.first_name}}'s {% endif %} track record
+                </h3>
+              </div>
+              <br>
+              <div class="d-flex justify-content-between align-items-center mb-0 w-100" style="margin-left: -74px;">
+                {% if worker.tasks %}
+                  <div style="width: 100%; border: none" class="card bg-light mx-auto">
+                    {% if worker.past_due_tasks %}
+                      <div style="width: 100%" class="table-wrap table-responsive widget-container">
+                        <table class="table table-borderless" style="padding-left: 10px; padding-right: 10px">
+                            <thead>
+                              <tr class="p-0">
+                                <td style="border-radius:10px; text-align: center;" colspan="5">
+                                  <small class="btn btn-primary h-4 px-2 fw-semibold" style="margin-bottom: 0.05rem;">PAST-DUE TASKS</small>
+                                </td>
+                              </tr>
+                              <tr class="p-0">
+                                <td style="border-radius:10px;" class="text-center w100 p-0 py-2" scope="col">
+                                  <small class="text-muted">NAME</small>
+                                </td>
+                                <td style="border-radius:10px;" class="text-center w100 p-0 py-2" scope="col">
+                                  <small class="text-muted">CO-WORKERS</small>
+                                </td>
+                                <td style="border-radius:10px;" class="text-center w100 p-0 py-2" scope="col">
+                                  <small class="text-muted">TIME CONSTRAINTS</small>
+                                </td>
+                                <td style="border-radius:10px;" class="text-center w50 p-0 py-2" scope="col">
+                                  <small class="text-muted">PRIORITY</small>
+                                </td>
+                              </tr>
+                            </thead>
+                          <tbody>
+                            {% for task in worker.past_due_tasks.all %}
+                              <tr class="border-bottom bg-white">
+                                <td style="width: 620px; border-radius:10px;" class="align-middle">
+                                  <div class="d-flex align-items-center">
+                                    <a class="link mx-auto" href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none; font-size: 20px;">
+                                        {{ task.name }}
+                                    </a>
+                                  </div>
+                                </td>
+                                <td style="border-radius:10px" class="align-middle">
+                                  <div class="row text-center">
+                                    <div class="col-12 mt-1">
+                                      <div class="avatar-group">
+                                        {% for assignee in task.assignees.all %}
+                                          {% if not worker.id == assignee.id %}
+                                          <a href="{% url 'workflow_organizer:worker-detail' pk=assignee.id %}"
+                                             class="avatar avatar-sm rounded-circle"
+                                             style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden;"
+                                             data-bs-toggle="tooltip"
+                                             data-bs-placement="bottom"
+                                             title="{{ assignee.first_name }} {{ assignee.last_name }}">
+                                            <img src="{% static 'img/team/'|add:assignee.username|add:'.jpeg' %}">
+                                          </a>
+                                          {% endif %}
+                                        {% endfor %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td style="border-radius:10px;" class="text-center align-middle">
+                                  <div class="col-12">
+                                    <span class="far fa-calendar-alt text-muted"></span>
+                                    <span>{{ task.time_constraints }}</span>
+                                  </div>
+                                </td>
+                                <td style="width:150px; border-radius:10px;" class="text-center align-middle">
+                                  {% if task.priority in "U" %}
+                                    <span style="width:140px; margin-top: 10px; margin-bottom: 10px" class="btn btn-secondary red fw-semibold">URGENT</span>
+                                  {% elif task.priority in "A" %}
+                                    <span style="width:140px; margin-top: 10px; margin-bottom: 10px" class="btn btn-secondary orange fw-semibold">AVERAGE</span>
+                                  {% elif task.priority in "S" %}
+                                    <span style="width:140px; margin-top: 10px; margin-bottom: 10px" class="btn btn-secondary green fw-semibold">SIDE-TRACKED</span>
+                                  {% endif %}
+                                </td>
+                              </tr>
+                              <tr style="height: 5px;"></tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                       </div>
+                      {% endif %}
+                      {% if worker.underway_tasks %}
+                       <div style="width: 100%" class="table-wrap table-responsive widget-container">
+                        <table class="table table-borderless" style="padding-left: 10px; padding-right: 10px">
+                          <thead>
+                            <tr class="p-0">
+                              <td style="border-radius:10px; text-align: center;" colspan="5">
+                                <small class="btn btn-warning h-5 px-2 fw-semibold" style="margin-bottom: 0.05rem;">UNDERWAY TASKS</small>
+                              </td>
+                            </tr>
+                            <tr class="p-0">
+                              <td style="border-radius:10px;" class="text-center w100 p-0 py-2" scope="col">
+                                <small class="text-muted">NAME</small>
+                              </td>
+                              <td class="text-center w100 p-0 py-2" scope="col">
+                                <small class="text-muted">CO-WORKERS</small>
+                              </td>
+                              <td class="text-center w100 p-0 py-2" scope="col">
+                                <small class="text-muted">TIME CONSTRAINTS</small>
+                              </td>
+                              <td class="text-center w50 p-0 py-2" scope="col">
+                                <small class="text-muted">PRIORITY</small>
+                              </td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for task in worker.underway_tasks %}
+                              <tr class="border-bottom bg-white">
+                                <td style="width: 620px; border-radius:10px;" class="align-middle">
+                                  <div class="d-flex align-items-center">
+                                    <a class="link mx-auto" href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none; font-size: 20px;">
+                                        {{ task.name }}
+                                    </a>
+                                  </div>
+                                </td>
+                                <td style="border-radius:10px" class="align-middle">
+                                  <div class="row text-center">
+                                    <div class="col-12 mt-1">
+                                      <div class="avatar-group">
+                                        {% for assignee in task.assignees.all %}
+                                          {% if not worker.id == assignee.id %}
+                                          <a href="{% url 'workflow_organizer:worker-detail' pk=assignee.id %}"
+                                             class="avatar avatar-sm rounded-circle"
+                                             style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden;"
+                                             data-bs-toggle="tooltip"
+                                             data-bs-placement="bottom"
+                                             title="{{ assignee.first_name }} {{ assignee.last_name }}">
+                                            <img src="{% static 'img/team/'|add:assignee.username|add:'.jpeg' %}">
+                                          </a>
+                                          {% endif %}
+                                        {% endfor %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td style="border-radius:10px;" class="text-center align-middle">
+                                  <div class="col-12">
+                                    <span class="far fa-calendar-alt text-muted"></span>
+                                    <span>{{ task.time_constraints }}</span>
+                                  </div>
+                                </td>
+                                <td style="width:150px; border-radius:10px;" class="text-center align-middle">
+                                  {% if task.priority in "U" %}
+                                    <span style="width:140px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-secondary red fw-semibold">URGENT</span>
+                                  {% elif task.priority in "A" %}
+                                    <span style="width:140px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-secondary orange fw-semibold">AVERAGE</span>
+                                  {% elif task.priority in "S" %}
+                                    <span style="width:140px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-secondary green fw-semibold">SIDE-TRACKED</span>
+                                  {% endif %}
+                                </td>
+                              </tr>
+                              <tr style="height: 5px;"></tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                         </div>
+                      {% endif %}
+                      {% if worker.finished_tasks %}
+                       <div style="width: 100%" class="table-wrap table-responsive widget-container">
+                        <table class="table table-borderless" style="padding-left: 10px; padding-right: 10px">
+                          <thead>
+                            <tr class="p-0">
+                              <td style="border-radius:10px; text-align: center;" colspan="5">
+                                <small class="btn btn-success h-6 px-2 fw-semibold" style="margin-bottom: 0.05rem;">COMPLETED TASKS</small>
+                              </td>
+                            </tr>
+                            <tr class="p-0">
+                              <td style="border-radius:10px;" class="text-center w100 p-0 py-2" scope="col">
+                                <small class="text-muted">NAME</small>
+                              </td>
+                              <td class="text-center w100 p-0 py-2" scope="col">
+                                <small class="text-muted">CO-WORKERS</small>
+                              </td>
+                              <td style="border-radius:10px;" class="text-center w100 p-0 py-2" scope="col">
+                                <small class="text-muted">TIME CONSTRAINTS</small>
+                              </td>
+                              <td style="border-radius:10px;" class="text-center w50 p-0 py-2" scope="col">
+                                <small class="text-muted">PRIORITY</small>
+                              </td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for task in worker.finished_tasks.all %}
+                              {% if task.is_completed %}
+                              <tr class="border-bottom bg-white">
+                                <td style="width: 620px; border-radius:10px; margin-bottom: 20px" class="align-middle">
+                                 <div class="d-flex align-items-center">
+                                    <a class="link mx-auto" href="{% url 'workflow_organizer:task-detail' pk=task.id %}" style="text-decoration: none; font-size: 20px;">
+                                        {{ task.name }}
+                                    </a>
+                                 </div>
+                                </td>
+                                <td style="border-radius:10px" class="align-middle">
+                                  <div class="row text-center">
+                                    <div class="col-12 mt-1">
+                                      <div class="avatar-group">
+                                        {% for assignee in task.assignees.all %}
+                                          {% if not worker.id == assignee.id %}
+                                          <a href="{% url 'workflow_organizer:worker-detail' pk=assignee.id %}"
+                                             class="avatar avatar-sm rounded-circle"
+                                             style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden;"
+                                             data-bs-toggle="tooltip"
+                                             data-bs-placement="bottom"
+                                             title="{{ assignee.first_name }} {{ assignee.last_name }}">
+                                            <img src="{% static 'img/team/'|add:assignee.username|add:'.jpeg' %}">
+                                          </a>
+                                          {% endif %}
+                                        {% endfor %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td style="border-radius:10px;" class="text-center align-middle">
+                                  <div class="col-12">
+                                    <span class="far fa-calendar-alt text-muted"></span>
+                                    <span>{{ task.time_constraints }}</span>
+                                  </div>
+                                </td>
+                                <td style="width:150px; border-radius:10px;" class="text-center align-middle">
+                                  {% if task.priority in "U" %}
+                                    <span style="width:140px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-secondary red fw-semibold">URGENT</span>
+                                  {% elif task.priority in "A" %}
+                                    <span style="width:140px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-secondary orange fw-semibold">AVERAGE</span>
+                                  {% elif task.priority in "S" %}
+                                    <span style="width:140px; margin-top: 10px; margin-bottom: 10px;" class="btn btn-secondary green fw-semibold">SIDE-TRACKED</span>
+                                  {% endif %}
+                                </td>
+                              </tr>
+                              {% endif %}
+                             <tr style="height: 5px;"></tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                        </div>
+                     </div>
+                  {% endif %}
+                  </div>
+                {% else %}
+                  <p class="text-lg mb-0">There is no activity yet!</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </section >
+      </div>
+    </div>
+
+<body>
+
+{% endblock content %}

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <mask id="wave">
+        <path d="M1440,100 C1340,66 1140,33 940,33 S540,100 340,100 S40,33 0,100 L0,100 Z"/>
+    </mask>
+</svg>
