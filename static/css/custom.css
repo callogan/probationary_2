@@ -33,3 +33,7 @@ h1, h2, h3 {
 .border-bottom {
   border-bottom: 2px solid red;
 }
+
+.worker-full-name {
+  font-size: 32px;
+}

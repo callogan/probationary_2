@@ -2,6 +2,8 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser, User
 from django.db import models
 from django.db.models import QuerySet, Q, Count
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
 from taggit.managers import TaggableManager
 
 
@@ -34,6 +36,7 @@ class Position(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=255)
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='teams_joined', blank=True)
 
     def __str__(self) -> str:
         return self.name
@@ -41,12 +44,11 @@ class Team(models.Model):
     def sum_of_budget(self) -> int:
         return sum(project.budget for project in self.projects.all())
 
+    def add_member(self, user):
+        self.members.add(user)
 
-class Tag(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
+    def remove_member(self, user):
+        self.members.remove(user)
 
 
 class Worker(AbstractUser):
@@ -57,10 +59,10 @@ class Worker(AbstractUser):
         blank=True,
         null=True
     )
-    team = models.ManyToManyField(
+    teams = models.ManyToManyField(
         Team,
         related_name="workers",
-       blank=True,
+        blank=True,
     )
 
     user_permissions = models.ManyToManyField(
@@ -130,9 +132,12 @@ class Project(models.Model):
         on_delete=models.CASCADE,
         related_name="projects",
     )
-    team = models.ManyToManyField(
+
+    team = models.ForeignKey(
         Team,
+        on_delete=models.CASCADE,
         blank=True,
+        null=True,
         related_name="projects"
     )
     budget = models.DecimalField(decimal_places=2, max_digits=8, default=0)
@@ -141,33 +146,78 @@ class Project(models.Model):
     tags = TaggableManager(blank=True)
 
     def get_project_progress(self):
-        blocks = self.projectblock_set.all()
-        total_block_count = blocks.count()
-        completed_block_count = blocks.filter(task__is_completed=True).distinct().count()
+        total_progress = 0
+        number_of_blocks = 0
 
-        if total_block_count > 0:
-            project_progress = (completed_block_count / total_block_count) * 100
-            return round(project_progress, 2)
+        # Получаем все блоки, относящиеся к текущему проекту
+        blocks = self.projectblock_set.all()
+
+        for block in blocks:
+            block_progress = block.get_block_progress()
+            total_progress += block_progress
+            number_of_blocks += 1
+
+        if number_of_blocks > 0:
+            avg_progress = total_progress / number_of_blocks
         else:
-            return 0.0
+            avg_progress = 0
+
+        return round(avg_progress, 2)
+
+        # Метод для определения текущей фазы проекта
+    def get_current_phase(self):
+        if self.progress == 0:
+            return "Подготовительная фаза"
+        elif 0 < self.progress < 100:
+            return "Фаза реализации"
+        elif self.progress == 100:
+            return "Фаза завершения"
+        else:
+            return "Неизвестная фаза"
+
+    # Другие поля и методы вашей модели...
 
     def __str__(self) -> str:
         return self.name
 
 
 class ProjectBlock(models.Model):
-    project = models.ForeignKey('Project', on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    depiction = models.TextField()
+    total_tasks = models.PositiveIntegerField(null=False, blank=False)
+    completed_tasks = models.PositiveIntegerField(default=0)
+
+    @staticmethod
+    def predefined_blocks():
+        return [
+            {"name": "Frontend development", "index": 0},
+            {"name": "Backend development", "index": 1},
+            {"name": "Database/data layer", "index": 2},
+            {"name": "Testing", "index": 3},
+            {"name": "Infrastructure setup", "index": 4},
+            {"name": "Documentation", "index": 5},
+            {"name": "UX/design", "index": 6}
+        ]
 
     def get_block_progress(self):
-        total_tasks = self.task_set.count()  # Общее количество заданий в блоке
-        completed_tasks = self.task_set.filter(is_completed=True).count()  # Количество завершенных заданий в блоке
-
-        if total_tasks > 0:
-            return round((completed_tasks / total_tasks) * 100, 2)
+        if self.total_tasks > 0:
+            return round((self.completed_tasks / self.total_tasks) * 100, 2)
         else:
             return 0.0
+
+    def __str__(self) -> str:
+        return f"Project name: {self.project} (project block: {self.name})"
+
+
+    # def get_block_progress(self):
+    #     total_tasks = self.task_set.count()  # Общее количество заданий в блоке
+    #     completed_tasks = self.task_set.filter(is_completed=True).count()  # Количество завершенных заданий в блоке
+    #
+    #     if total_tasks > 0:
+    #         return round((completed_tasks / total_tasks) * 100, 2)
+    #     else:
+    #         return 0.0
 
 
 class Task(models.Model):
@@ -179,8 +229,6 @@ class Task(models.Model):
 
     name = models.CharField(max_length=255)
     depiction = models.TextField()
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-    block = models.ForeignKey(ProjectBlock, on_delete=models.CASCADE, null=True, blank=True)
     time_constraints = models.DateField()
     is_completed = models.BooleanField(default=False)
     priority = models.CharField(

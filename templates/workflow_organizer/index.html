@@ -73,19 +73,29 @@
               <p>
                 On our platform consistently work <strong class="fw-semibold">{{ num_teams }} teams.</strong> It is a venue for combined collaboration.
               </p>
-              {%  if user.is_authenticated %}
-{#              <a href="{% url 'workflow_organizer:team-detail' pk=user.team.id %}" style="text-decoration: none;">Find out more#}
-{#                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">#}
-{#                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>#}
-{#                </svg>#}
-{#              </a>#}
-              {%  else %}
-              <a href="{% url 'workflow_organizer:team-detail' pk=user.pk %}" style="text-decoration: none;">Find out more
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                </svg>
+              {% if user.is_authenticated %}
+              <a class="nav-link d-flex cursor-pointer align-items-center fs-7" id="dropdownMenuDocs" data-bs-toggle="dropdown" aria-expanded="false" style="color: royalblue">
+                Select your team
+                <i class="fa fa-chevron-down ms-1 fa-xs"></i>
               </a>
-              {%  endif %}
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive mt-0 mt-lg-3 p-3 border-radius-lg" aria-labelledby="dropdownMenuDocs">
+                <div class="d-none d-lg-block">
+                  <ul class="list-group">
+                    {% for team in user.teams.all %}
+                      <li class="nav-item list-group-item border-0 p-0">
+                        <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:team-detail' pk=team.id %}">
+                          <h6 class="dropdown-header text-primary font-weight-bolder d-flex justify-content-center align-items-center p-0" style="color: #027cc7">{{ team.name }}</h6>
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </ul>
+             {%  else %}
+              <a href="{% url 'workflow_organizer:team-detail' pk=user.pk %}" style="text-decoration: none;">Select your team
+                <i class="fa fa-chevron-down ms-1 fa-xs"></i>
+              </a>
+              {% endif %}
             </div>
           </div>
           <div class="col-md-4 col-lg-3 text-left mx-auto mt-5">

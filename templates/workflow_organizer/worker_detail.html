@@ -57,7 +57,7 @@
                 <div class="row pt-1">
                   <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mx-auto mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-2" style="margin-left: -150px; margin-top: -20px; ">
-                      <h3 class="mb-0 font-weight-bold">{{ worker.first_name }} {{ worker.last_name }}</h3>
+                      <h3 class="mb-0 font-weight-bold worker-full-name">{{ worker.first_name }} {{ worker.last_name }}</h3>
                       {% if user.id == worker.id %}
                         <ul class="list-unstyled">
                           <li style="box-shadow: 0 0.3125rem 0.625rem 0 rgba(151, 153, 55, 0.32); margin-top: 10px;" class="card dropdown dropdown-hover mx-2" >
@@ -84,14 +84,18 @@
                                   </li>
                                   {% if user.team %}
                                     <li class="nav-item list-group-item border-0 p-0">
-                                      <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:team-update' pk=user.team.id %}">
-                                        <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Edit team</h6>
-                                      </a>
+                                      {% for team in user.teams.all %}
+                                        <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:team-update' pk=team.id %}">
+                                          <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">Edit {{ team.name }}</h6>
+                                        </a>
+                                      {% endfor %}
                                     </li>
                                     <li class="nav-item list-group-item border-0 p-0">
-                                      <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:team-delete' pk=user.team.id %}">
-                                        <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0">Delete team</h6>
-                                      </a>
+                                      {% for team in user.teams.all %}
+                                        <a class="dropdown-item py-2 ps-3 border-radius-md" target="_blank" href="{% url 'workflow_organizer:team-delete' pk=team.id %}">
+                                          <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">Delete {{ team.name }}</h6>
+                                        </a>
+                                      {% endfor %}
                                     </li>
                                   {% else %}
                                     <li class="nav-item list-group-item border-0 p-0">
@@ -121,35 +125,41 @@
                     </div>
                     <div class="row mb-3" style="margin-top: -20px">
                       <div class="col-auto" style="margin-left: -150px; ">
-                        {% if worker.team %}
-                          <a href="{% url 'workflow_organizer:team-detail' pk=worker.team.id %}"
+                        {% for team in worker.teams.all %}
+                          <a href="{% url 'workflow_organizer:team-detail' pk=team.id %}"
                              title="{{ worker.team.name }}"
-                             style="text-decoration: none;">
-                            <p style="display: inline">{{ worker.team.name }} team</p>
+                             style="text-decoration: none; color: #ff9900">
+                            <p class="font-weight-bolder" style="display: inline">{{ team.name }} team</p>
                           </a>
-                        {% endif %}
+                          <br>
+                        {% endfor %}
                       </div>
                     </div>
-                  <div class="row mb-3">
+                    {% if worker.id != user.id %}
+                    <div class="row mb-3">
                       <div class="col-auto" style="margin-left: -150px; margin-bottom: -20px;">
-                       {% if user.team  and user.id != worker.id %}
                         <div class="dropdown">
-                          <button class="btn btn-secondary dropdown-toggle" type="button" id="teamsDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           Accessible teams
+                          <button class="btn btn-success dropdown-toggle font-weight-bolder" type="button" id="teamsDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Command-matching list
                           </button>
                           <div class="dropdown-menu" aria-labelledby="teamsDropdown">
-                            {% for team in user.team.all %}
-                              <a class="dropdown-item
-                                {% if team in worker.team.all %}text-danger{% else %}text-primary{% endif %}"
-                                href="{% url 'toggle-team' pk=worker.id team_id=team.id %}">
-                                {{ team.name }}
+                            {% for team in user.teams.all %}
+                              <a class="dropdown-item {% if team in worker.teams.all %}text-primary{% else %}text-danger{% endif %}" href="{% url 'workflow_organizer:toggle-team-add' pk=worker.id team_id=team.id %}">
+                                <div class="d-flex align-items-center justify-content-between custom-dropdown-item-initial">
+                                  <p class="fw-semibold mb-0" style="margin-right: 20px; color: #ff9900;">{{ team.name }}</p>
+                                  {% if team in worker.teams.all %}
+                                    <button class="btn button-sm text-white font-weight-bolder" style="background-color: #fe000b; font-size: 10px; margin-bottom: 0; padding: 2px 5px;">Remove</button>
+                                  {% else %}
+                                    <button class="btn button-sm text-white font-weight-bolder" style="background-color: #648c1c; font-size: 10px; margin-bottom: 0; padding: 2px 5px;">Add</button>
+                                  {% endif %}
+                                </div>
                               </a>
                             {% endfor %}
                           </div>
                         </div>
-                      {% endif %}
                       </div>
                     </div>
+                    {% endif %}
                     <div class="row mb-0">
                       <div class="col-auto" style="margin-left: -150px">
                         <span class="mb-0"><i>#{{ worker.position.name }}</i></span>

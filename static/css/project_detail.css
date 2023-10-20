@@ -1,0 +1,16 @@
+/* deadline styles */
+
+.deadline-info {
+  padding: 20px;
+  border-radius: 80px;
+}
+
+.deadline-normal {
+  background-color: green;
+  color: #fff;
+}
+
+.deadline-overdue {
+  background-color: red;
+  color: #fff;
+}

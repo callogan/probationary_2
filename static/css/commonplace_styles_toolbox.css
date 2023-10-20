@@ -14291,6 +14291,10 @@ li {
   margin: 0;
 }
 
+.custom-dropdown-item-initial {
+  padding-bottom: 0.10rem;
+}
+
 /* general additional styles */
 body {
     overflow-x: hidden;

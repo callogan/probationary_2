@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 
-{% block title %} {{ object|yesno:"Edit,Create" }} Project {% endblock %}
+{% block title %} Create Project {% endblock %}
 
 {% block content %}
 {% include "includes/sidebar.html" %}
@@ -12,6 +12,7 @@
     <header>
       <div class="page-header min-height-300">
         <span class="mask bg-gradient-success opacity-4"></span>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
       </div>
     </header>
 
@@ -22,7 +23,7 @@
             <div class="col-12 mx-auto">
               <div class="col-lg-9 col-md-9 z-index-2 position-relative px-md-1 px-sm-5 mx-auto mb-2">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                  <h3 class="mb-2 mx-auto font-weight-bold">{{ object|yesno:"Edit,Create" }} Project </h3>
+                  <h3 class="mb-2 mx-auto font-weight-bold"> Create Project </h3>
                 </div>
                 <br><br>
                 <form role="form" method="post" action="">
@@ -78,22 +79,19 @@
                   </div>
                   <div class="container">
                     <div class="row mb-2">
-
                       <div class="col">
                         {% for block in project_blocks %}
-                          <div class="form-check">
+                          <div>
                             <input class="form-check-input mb-4" type="checkbox" name="project_blocks" value="{{ forloop.counter0 }}">
                             <label class="form-check-label mb-4">{{ block.name }}</label>
                           </div>
                         {% endfor %}
                       </div>
-
                       <div class="col-2 mb-2 p-0">
                         {% for block in project_blocks %}
                           <input type="number" name="block_{{ forloop.counter0 }}_total_tasks" class="form-control mb-2">
                         {% endfor %}
                       </div>
-
                       {% if object %}
                       <div class="col-2 mb-2">
                         {% for block in project_blocks %}
@@ -103,7 +101,7 @@
                       {% endif %}
                       <div class="col-2 mb-2">
                         {{ form.priority|as_crispy_field }}
-                      </div>
+                     </div>
                     </div>
                   </div>
                   <div class="text-center">

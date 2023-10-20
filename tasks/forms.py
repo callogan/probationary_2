@@ -3,8 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from taggit.forms import TagField
 
-from .models import Tag, Task, Project, TaskType, Position, Worker, Team, WorkerEvaluation, ProjectCategory, \
-    ProjectBlock
+from .models import Task, Project, TaskType, Position, Worker, Team, WorkerEvaluation, ProjectCategory, ProjectBlock
 
 
 class DateInput(forms.DateInput):
@@ -173,7 +172,7 @@ class ProjectCategoryForm(forms.ModelForm):
     )
 
     class Meta:
-        model = TaskType
+        model = ProjectCategory
         fields = "__all__"
 
 
@@ -220,38 +219,6 @@ class PositionSearchForm(forms.Form):
 
 
 class ProjectForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Добавляем поля для указания количества заданий в каждом блоке
-        blocks = ProjectBlock.objects.filter(project=self.instance)
-        for block in blocks:
-            initial_task_count = block.task_set.filter(is_completed=False).count()
-            self.fields[f'block_{block.id}_task_count'] = forms.IntegerField(
-                label=f"Количество заданий в блоке {block.name}",
-                initial=initial_task_count,
-                required=False,  # Можно оставить поле пустым
-                min_value=0
-            )
-
-    def save(self, commit=True):
-        instance = super().save(commit=commit)
-        if commit:
-            for field_name, field_value in self.cleaned_data.items():
-                if field_name.startswith('block_') and field_name.endswith('_task_count'):
-                    block_id = int(field_name.split('_')[1])
-                    block = ProjectBlock.objects.get(pk=block_id)
-                    current_task_count = block.task_set.filter(is_completed=False).count()
-                    new_task_count = field_value
-
-                    if current_task_count < new_task_count:
-                        for _ in range(new_task_count - current_task_count):
-                            Task.objects.create(block=block, description=f"Новое задание в блоке {block.name}",
-                                                is_completed=False)
-                    elif current_task_count > new_task_count:
-                        tasks_to_delete = block.task_set.filter(is_completed=False)[
-                                          :current_task_count - new_task_count]
-                        tasks_to_delete.delete()
 
     name = forms.CharField(widget=forms.TextInput(attrs={
         "placeholder": "Name*",
@@ -285,6 +252,10 @@ class ProjectForm(forms.ModelForm):
         "style": "padding: 10px;",
         "placeholder": "Budget"
     }), label="", decimal_places=2, max_digits=8)
+    funds_used = forms.DecimalField(widget=forms.NumberInput(attrs={
+        "style": "padding: 10px;",
+        "placeholder": "Funds used"
+    }), label="", decimal_places=2, max_digits=8, required=False)
     progress = forms.DecimalField(widget=forms.NumberInput(attrs={
         "style": "padding: 10px;",
         "placeholder": "Progress"
@@ -292,9 +263,112 @@ class ProjectForm(forms.ModelForm):
 
     tags = TagField(required=False)
 
+    # Другие поля формы
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        project_blocks = ProjectBlock.predefined_blocks()
+
+        block_choices = [(str(block["index"]), block["name"]) for block in project_blocks]
+
+        self.fields['project_blocks'] = forms.MultipleChoiceField(
+            choices=block_choices,
+            widget=forms.CheckboxSelectMultiple,
+            required=False,
+        )
+
+        # перевірка чи є проект новим
+        is_creating_project = not self.instance.pk if self.instance else True
+
+        # Додавання полів для кожного блоку і відповідних виконаних завдань
+        for i in range(7):
+            self.fields[f'block_{i}_total_tasks'] = forms.IntegerField(required=False)
+
+            # Створюємо поле completed_tasks зі значенням 0 при створенні проекту
+            if is_creating_project:
+                self.fields[f'block_{i}_completed_tasks'] = forms.IntegerField(initial=0, widget=forms.HiddenInput(), required=False)
+            else:
+                self.fields[f'block_{i}_completed_tasks'] = forms.IntegerField(required=False)
+
+        # def clean(self):
+        #     cleaned_data = super().clean()
+        #     for i in range(7):
+        #         total_tasks = cleaned_data.get(f'block_{i}_total_tasks')
+        #         completed_tasks = cleaned_data.get(f'block_{i}_completed_tasks')
+        #
+        #         # Check if completed_tasks is greater than total_tasks
+        #         if total_tasks is not None and completed_tasks is not None and completed_tasks > total_tasks:
+        #             self.errors[""] = self.error_class(["Completed tasks cannot exceed total tasks."])
+        #             print(f"Block {i}: Completed tasks ({completed_tasks}) exceed total tasks ({total_tasks})")
+        #             print("it's a dereliction")
+        #
+        # def debug_form_errors(self):
+        #     return getattr(self, 'debug_form_errors', None)
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['project_blocks'].queryset = ProjectBlock.objects.all()
+    #
+    #     for block in self.fields['project_blocks'].queryset:
+    #         self.fields[f'block_{block.id}_tasks'] = forms.IntegerField(required=False)
+
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #
+    #     # Добавляем поля для указания количества заданий в каждом блоке
+    #     blocks = ProjectBlock.objects.filter(project=self.instance)
+    #     for block in blocks:
+    #         initial_task_count = block.task_set.filter(is_completed=False).count()
+    #         self.fields[f'block_{block.id}_task_count'] = forms.IntegerField(
+    #             label=f"Number of tasks in {block.name}",
+    #             initial=initial_task_count,
+    #             required=False,  # Можно оставить поле пустым
+    #             min_value=0
+    #         )
+
+    # Обновляем кол-во заданий в блоках
+    # def save(self, commit=True):
+    #     if commit:
+    #         for field_name, field_value in self.cleaned_data.items():
+    #             if field_name.startswith('block_') and field_name.endswith('_task_count'):
+    #                 block_id = int(field_name.split('_')[1])
+    #                 block = ProjectBlock.objects.get(pk=block_id)
+    #                 current_task_count = block.task_set.filter(is_completed=False).count()
+    #                 new_task_count = field_value
+    #
+    #                 if current_task_count < new_task_count:
+    #                     for _ in range(new_task_count - current_task_count):
+    #                         Task.objects.create(block=block, description=f"Новое задание в блоке {block.name}",
+    #                                             is_completed=False)
+    #                 elif current_task_count > new_task_count:
+    #                     tasks_to_delete = block.task_set.filter(is_completed=False)[
+    #                                       :current_task_count - new_task_count]
+    #                     tasks_to_delete.delete()
+    #
+    #     if commit:
+    #         return super().save(commit=commit)
+    #     else:
+    #         return None
+
     class Meta:
         model = Project
-        fields = "__all__"
+        # fields = "__all__"
+
+        fields = [
+            'name',
+            'depiction',
+            'team',
+            'time_constraints',
+            "priority",
+            'project_category',
+            "budget",
+            "funds_used",
+            "progress",
+            "tags",
+            # "project_block"
+        ]
 
 
 class TeamForm(forms.ModelForm):

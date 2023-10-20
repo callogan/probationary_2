@@ -88,7 +88,7 @@ WSGI_APPLICATION = "probationary_2.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'probationarydb6',
+        'NAME': 'probationarydb9',
         'USER': 'probationarydb',
         'PASSWORD': 'password',
         'HOST': 'localhost',

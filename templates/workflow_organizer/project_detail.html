@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block css_additional %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/project_detail.css' %}">
 
 {% endblock %}
 
@@ -83,7 +84,7 @@
                               </div>
                             </div>
                             <div style="width: 180px;" class="progress progress-augmenting">
-                              <div class="progress-bar progress-bar-compulsory bg-gradient-info w-50%" role="progressbar" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ project.progress }}%;"></div>
+                              <div class="progress-bar progress-bar-compulsory bg-gradient-info w-50%" role="progressbar" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ project.get_project_progress }}%;"></div>
                             </div>
                           </div>
                         </td>
@@ -92,6 +93,7 @@
                         <td class="text-muted"><i>Budget</i></td>
                         <td style="font-size: 13px" class="font-weight-bolder text-muted">{{ project.budget }}$</td>
                       </tr>
+                      placeholder for budget tracking
                       <tr>
                         <td class="text-muted"><i>Team</i></td>
                         <td>
@@ -135,6 +137,17 @@
                           {{ project.time_constraints }}
                         </td>
                       </tr>
+                      <div class="deadline-info">
+                        {% if days_left %}
+                          <div class="deadline-normal">
+                            Осталось {{ days_left }} дней до дедлайна
+                          </div>
+                        {% elif passed_deadline %}
+                          <div class="deadline-overdue">
+                            Проект просрочен!
+                          </div>
+                        {% endif %}
+                      </div>
                       <tr>
                         <td class="text-muted"><i>Project category</i></td>
                         <td>
@@ -153,6 +166,20 @@
                             </div>
                           </td>
                         </tr>
+                      <div class="container">
+                        {% for block in project.projectblocks.all %}
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <input type="checkbox" name="project_block" value="{{ block.id }}" id="project_block_{{ block.id }}" class="mb-2">
+                                <label for="project_block_{{ block.id }}" style="font-size: 14px;">{{ block.name }}</label>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <input type="number" name="kolvo_{{ block.id }}" id="kolvo_{{ block.id }}" class="form-control mt-n2">
+                                <label for="kolvo_{{ block.id }}">Количество: </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                         {% for block in project.projectblock_set.all %}
                           <tr>
                             <td class="text-muted"><i>{{ block.name }}</i></td>
@@ -168,8 +195,21 @@
                                 </div>
                               </div>
                             </td>
+                          <td class="text-muted"><i>{{ project.projectblock_set.all }}</i></td>
                           </tr>
+                        <div class="col-6 mb-2">
+                          <div id="total_tasks">{{ block.name }}</div>
+                        </div>
+                         <div class="col-6 mb-2">
+                          <label for="total_tasks">Общее количество задач:</label>
+                          <div id="total_tasks">{{ block.total_tasks }}</div>
+                        </div>
+                        <div class="col-6 mb-2">
+                          <label for="completed_tasks">Завершенные задачи:</label>
+                          <div id="completed_tasks">{{ block.completed_tasks }}</div>
+                        </div>
                         {% endfor %}
+                      <h2>Текущая фаза проекта: {{ current_phase }}</h2>
                       </tbody>
                     </table>
                     <hr class="hr mb-4" style="border-bottom: 1px solid rgba(0, 0, 0, .5)">

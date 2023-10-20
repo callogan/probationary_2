@@ -221,12 +221,12 @@ urlpatterns = [
          name="team-delete"),
 
     path(
-        "teams/<int:pk>/toggle-add/",
+        "teams/<int:pk>/toggle-add/<int:team_id>/",
         ToggleAddToTeamView.as_view(),
         name="toggle-team-add",
     ),
     path(
-        "teams/<int:pk>/switch/",
+        "teams/<int:pk>/switch/<str:action>/",
         SwitchTeamView.as_view(),
         name="switch-team",
     ),

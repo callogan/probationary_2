@@ -93,11 +93,11 @@
                           <div class="progress-wrapper ms-2">
                             <div class="progress-info">
                               <div class="progress-percentage">
-                                <span class="text-xs text-primary fw-semibold">{{ project.progress }}%</span>
+                                <span class="text-xs text-primary fw-semibold">{{ project.get_project_progress }}%</span>
                               </div>
                             </div>
                             <div class="progress progress-supplemental">
-                              <div class="progress-bar progress-bar-peremptory bg-gradient-primary w-{{ project.progress }}" role="progressbar" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ project.progress }}%;"></div>
+                              <div class="progress-bar progress-bar-peremptory bg-gradient-primary w-{{ project.get_project_progress }}" role="progressbar" aria-valuenow="{{ project.get_project_progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ project.get_project_progress }}%;"></div>
                             </div>
                           </div>
                         </td>
@@ -135,7 +135,7 @@
                   <tbody>
                     {% for team in teams %}
                       <tr>
-                        <td class="min-width-40">
+                        <td class="w-30">
                           <div class="row">
                             <div class="col-2 d-flex flex-column justify-content-center"></div>
                             <div class="col-4 d-flex flex-column justify-content-center" >
@@ -145,47 +145,53 @@
                             </div>
                             <div class="col-1 d-flex flex-column justify-content-center"></div>
                             <div class="col-5 pt-2 d-flex px-2 py-1">
-                            {% if user not in team.workers.all %}
-                              <form class="ms-2 ps-4 pt-2" action="{% url 'workflow_organizer:switch-team' pk=team.id %}" method="post">
+                            {% if user not in team.members.all %}
+                            <form class="ms-2 pt-2" action="{% url 'workflow_organizer:switch-team' pk=team.id action='add'%}" style="padding-left: 40px;" method="post">
+                              {% csrf_token %}
+                              <input type="hidden" name="team_id" value="{{ team.id }}">
+                              <button style="background-color: rgb(255, 180, 29); font-size: 10px;" type="submit" class="btn btn-sm fw-semibold">
+                                Add to team
+                              </button>
+                            </form>
+                           {% else %}
+                            <div class="d-flex justify-content-between align-items-center" style="padding-bottom: 0;">
+                              <form class="ms-2 ps-4 pt-2" action="{% url 'workflow_organizer:switch-team' pk=team.id action='delete'%}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="team_id" value="{{ team.id }}">
-                                  <button style="background-color: rgb(255, 180, 29); font-size: 10px;"
-                                        type="submit" class="btn btn-sm fw-semibold">
-                                  Add to team
-                                  </button>
+                                <button style="background-color: red; font-size: 10px;" type="submit" class="btn btn-sm fw-semibold">
+                                  Remove from team
+                                </button>
                               </form>
-                            {% else %}
-                              <div class="d-flex justify-content-center" style="padding-bottom: 8px;">
-                                <span class="fw-semibold"
-                                style="
-                                padding: 5px 10px;
-                                font-size: 12px;
-                                background-color: green;
-                                color: #fff;
-                                border-radius: 20px;"
-                                >
-                                You are team member
-                                </span>
-                              </div>
-                            {% endif %}
+                            </div>
+                          {% endif %}
                           </div>
                         </div>
                         </td>
-                        <td class="w-40">
+                        <td class="w-30 align-middle">
+{#                        <div class="parent-container d-flex justify-content-center align-items-center">#}
                           <div class="text-center">
                             <div class="avatar-group">
-                              {% for worker in team.workers.all %}
-                                <a href="{% url 'workflow_organizer:worker-detail' pk=worker.id %}"
-                                   class="avatar avatar-sm rounded-circle border-1"
-                                   style="border-radius: 50%; overflow: hidden;"
-                                   data-bs-toggle="tooltip"
-                                   data-bs-placement="bottom"
-                                   title="{{ worker.first_name }} {{ worker.last_name }}">
-                                <img src="{% static 'img/team/'|add:worker.username|add:'.jpeg' %}" alt="{{ team.name }}">
-                                </a>
-                              {% endfor %}
+                           {% for worker in team.workers.all %}
+                            <a href="{% url 'workflow_organizer:worker-detail' pk=worker.id %}"
+                               class="avatar avatar-sm rounded-circle border-1"
+                               style="border-radius: 50%; overflow: hidden;"
+                               data-bs-toggle="tooltip"
+                               data-bs-placement="bottom"
+                               title="{{ worker.first_name }} {{ worker.last_name }}">
+
+                              <img src="{% static 'img/team/'|add:worker.username|add:'.jpeg' %}" alt="{{ team.name }}"
+                                   id="avatar-{{ worker.id }}"
+                                   onerror="placeholderAvatar(this)">
+                            </a>
+                          {% endfor %}
+                          <script>
+                            function placeholderAvatar(img) {
+                              img.src = "{% static 'img/team/avatar-placeholder.jpeg' %}";
+                            }
+                          </script>
                             </div>
                           </div>
+{#                         </div>#}
                         </td>
                         <td style="font-size: 13px; color: white" class="w-10 align-middle text-center">
                           <span style="color: white" class="text-xs fw-semibold"> {{ team.sum_of_budget }}$</span>
