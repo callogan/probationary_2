@@ -265,31 +265,60 @@ class ProjectForm(forms.ModelForm):
 
     # Другие поля формы
 
+    project_blocks = forms.MultipleChoiceField(
+        choices=[],
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         project_blocks = ProjectBlock.predefined_blocks()
-
         block_choices = [(str(block["index"]), block["name"]) for block in project_blocks]
 
-        self.fields['project_blocks'] = forms.MultipleChoiceField(
-            choices=block_choices,
-            widget=forms.CheckboxSelectMultiple,
-            required=False,
-        )
+        self.fields['project_blocks'].choices = block_choices
 
-        # перевірка чи є проект новим
         is_creating_project = not self.instance.pk if self.instance else True
 
-        # Додавання полів для кожного блоку і відповідних виконаних завдань
-        for i in range(7):
-            self.fields[f'block_{i}_total_tasks'] = forms.IntegerField(required=False)
+        for block in project_blocks:
+            block_id = block['index']
 
-            # Створюємо поле completed_tasks зі значенням 0 при створенні проекту
+            self.fields[f'block_{block_id}_assigned'] = forms.ModelChoiceField(
+                queryset=Team.objects.none(),
+                required=False
+            )
+
+            # перевірка чи є проект новим
+            is_creating_project = not self.instance.pk if self.instance else True
+
+            # Додавання полів для кожного блоку і відповідних виконаних завдань
+            for i in range(7):
+                self.fields[f'block_{i}_total_tasks'] = forms.IntegerField(required=False)
+
             if is_creating_project:
-                self.fields[f'block_{i}_completed_tasks'] = forms.IntegerField(initial=0, widget=forms.HiddenInput(), required=False)
+                self.fields[f'block_{block_id}_completed_tasks'] = forms.IntegerField(
+                    initial=0, widget=forms.HiddenInput(), required=False
+                )
             else:
-                self.fields[f'block_{i}_completed_tasks'] = forms.IntegerField(required=False)
+                self.fields[f'block_{block_id}_completed_tasks'] = forms.IntegerField(required=False)
+
+        if self.instance.pk and self.instance.team:
+            team_members = self.instance.team.members.all()
+            for field_name, field in self.fields.items():
+                if field_name.startswith('block_') and field_name.endswith('_assigned'):
+                    field.queryset = team_members
+
+    def save(self, commit=True):
+        if self.instance.pk and self.instance.team:
+            team_members = self.instance.team.members.all()
+            for field_name, field in self.fields.items():
+                if field_name.startswith('block_') and field_name.endswith('_assigned'):
+                    field.queryset = team_members
+
+        # Добавьте здесь вашу логику сохранения формы, если она отличается от предоставленной
+
+        return super().save(commit=commit)
 
         # def clean(self):
         #     cleaned_data = super().clean()

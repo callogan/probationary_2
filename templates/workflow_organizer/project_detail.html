@@ -93,7 +93,30 @@
                         <td class="text-muted"><i>Budget</i></td>
                         <td style="font-size: 13px" class="font-weight-bolder text-muted">{{ project.budget }}$</td>
                       </tr>
-                      placeholder for budget tracking
+                      {% if used_text %}
+                        <p>{{ used_text }}</p>
+                      {% endif %}
+
+                      {% if overrun_text %}
+                        <p>{{ overrun_text }}</p>
+                      {% endif %}
+<!--                      <div class="progress">-->
+<!--                        {% if overrun %}-->
+<!--                          <div class="progress-bar bg-danger" role="progressbar" style="width: {{ overrun_percent }}%;">{{ overrun_percent }}%</div>-->
+<!--                        {% else %}-->
+<!--                          <div class="progress-bar bg-success" role="progressbar" style="width: {{ progress_percent }}%;">{{ progress_percent }}%</div>-->
+<!--                        {% endif %}-->
+<!--                      </div>-->
+
+                      {% if overrun %}
+                        <div class="progress">
+                          <div class="progress-bar bg-danger" role="progressbar" style="width: {{ overrun_percent }}%;" aria-valuenow="{{ overrun_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      {% else %}
+                        <div class="progress">
+                          <div class="progress-bar bg-success" role="progressbar" style="width: {{ progress_percent }}%;" aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      {% endif %}
                       <tr>
                         <td class="text-muted"><i>Team</i></td>
                         <td>

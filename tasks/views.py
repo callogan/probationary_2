@@ -500,6 +500,29 @@ class ProjectDetailView(generic.DetailView):
             context['days_left'] = diff.days
         else:
             context['passed_deadline'] = True
+
+        context["budget"] = project.budget
+        context["funds_used"] = project.funds_used
+
+        # overrun = project.funds_used - project.budget
+        # overrun_percent = overrun / project.budget * 100
+        # context['overrun_percent'] = overrun_percent
+
+        if project.funds_used > project.budget:
+            overrun = project.funds_used - project.budget
+            overrun_percent = overrun / project.budget * 100
+            context['overrun'] = overrun
+            context['overrun_text'] = f'Бюджет превышен на {overrun_percent}%'
+            context['overrun_percent'] = overrun_percent
+
+        elif project.funds_used <= project.budget:
+            used_percent = project.funds_used / project.budget * 100
+            progress_percent = project.funds_used / project.budget * 100
+            context['used_text'] = f'Израсходовано {used_percent}% средств от бюджета'
+            context['progress_percent'] = progress_percent
+
+        # context["overrun"] = overrun
+
         context["completed_projects"] = Project.objects.filter(progress=100).count()
         return context
 
@@ -721,6 +744,7 @@ class ProjectCreate(LoginRequiredMixin, generic.CreateView):
                             errors_tasks.append(message)
 
                 if not errors_blocks and not errors_tasks and not initial_errors_blocks and not initial_errors_tasks:
+                    block = None
                     for id, fields in validation_map.items():
                         block_data = ProjectBlock.predefined_blocks()[id]
                         total_tasks_field_name = f'block_{id}_total_tasks'
@@ -735,6 +759,17 @@ class ProjectCreate(LoginRequiredMixin, generic.CreateView):
                             completed_tasks=0
                         )
 
+                        print(form.data)
+                        print("ROW DATA")
+                        print(form.cleaned_data)
+                        print("CLEANED DATA")
+                        assigned_to = form.cleaned_data.get(f'block_{id}_assigned')
+                        if block and assigned_to:
+                            block.assigned_to = assigned_to
+
+                            if block is not None:
+                                block.save()
+
                     form.save()
 
                     return redirect('workflow_organizer:project-detail', pk=project.pk)
@@ -745,7 +780,6 @@ class ProjectCreate(LoginRequiredMixin, generic.CreateView):
                         'project_blocks': blocks
                     }
                     return render(request, 'workflow_organizer/project_form_create.html', context)
-
 
 class ProjectUpdate(LoginRequiredMixin, generic.UpdateView):
     model = Project
@@ -1177,6 +1211,10 @@ class ProjectUpdate(LoginRequiredMixin, generic.UpdateView):
                     'selected_names': selected_names
                 }
 
+                print(form.data)
+                print("ROW DATA")
+                print(form.cleaned_data)
+                print("CLEANED DATA")
                 # Рендеринг с использованием контекста
                 return render(request, 'workflow_organizer/project_detail.html', context)
 

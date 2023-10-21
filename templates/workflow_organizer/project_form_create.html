@@ -100,6 +100,21 @@
                       </div>
                       {% endif %}
                       <div class="col-2 mb-2">
+                        <select
+                          name="block_{{ block.id }}_assigned"
+                          id="block_{{ block.id }}_select"
+                          style="display:none;">
+
+                          <option value="">Не назначен</option>
+
+                          {% for member in project.team.members.all %}
+                          <option value="{{ member.id }}">
+                            {{ member.first_name }}
+                          </option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="col-2 mb-2">
                         {{ form.priority|as_crispy_field }}
                      </div>
                     </div>
@@ -118,3 +133,5 @@
   </div>
 
 {% endblock content %}
+
+<script src="{% static 'js/project_form.js' %}"></script>
