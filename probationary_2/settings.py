@@ -24,7 +24,14 @@ SECRET_KEY = "django-insecure-97!b9@+n-*$h3-mq44k0sxyau_c2p(4)z(&d7@v$po^*1_)hnw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "tametsi.serveo.net", "seputus.serveo.net", "odium.serveo.net", "feritas.serveo.net", "*"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "tametsi.serveo.net",
+    "seputus.serveo.net",
+    "odium.serveo.net",
+    "feritas.serveo.net",
+    "*",
+]
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -86,13 +93,13 @@ WSGI_APPLICATION = "probationary_2.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'probationarydb9',
-        'USER': 'probationarydb',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "probationarydb10",
+        "USER": "probationarydb",
+        "PASSWORD": "password",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -148,9 +155,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 TAGGIT_CASE_INSENSITIVE = True
 
-LOGIN_REDIRECT_URL = '/'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+LOGIN_REDIRECT_URL = "/"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-DJANGO_BOOTSTRAP_CUSTOM_CSS_OVERRIDES = {
-    '--bs-progress-height': None
-}
+DJANGO_BOOTSTRAP_CUSTOM_CSS_OVERRIDES = {"--bs-progress-height": None}

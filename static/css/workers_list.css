@@ -1,3 +1,7 @@
+.username {
+    color: #ffb41d;
+}
+
 .li {list-style: none}
 
 .a {
@@ -19,12 +23,12 @@
   flex-direction: column;
  }
 
-
 .rating-points {
-    margin-top: 1px; /* Adjusted margin */
+    margin-top: 1px; /
 }
 
 /* Style for truncating long names with ellipsis */
+
 .rating-points:hover::after {
     content: ": " attr(data-rating);
     position: absolute;
@@ -39,18 +43,3 @@
     transform: translate(0, -100%); /* Adjusted translation */
     min-width: 100px; /* Adjust this width as needed */
 }
-
-.username {
-    color: #ffb41d;
-}
-
-
-
-
-
-
-
-
-
-
-

@@ -55,12 +55,19 @@
                       </div>
                     </div>
                     <div class="form-group row">
-                      <div class="col">
+                      <div class="col mt-0">
                         {{ form.position|as_crispy_field }}
                       </div>
-                      <div class="col">
-                         {{ form.team|as_crispy_field }}
-                       </div>
+                      <div class="col-6 mt-0">
+                        <div style="display: inline-block;">
+                          <p class="font-weight-bold small mb-2">Team</p>
+                        </div>
+                        <select id="teams" name="teams" class="form-select mt-0" multiple aria-label="multiple select example">
+                          {% for team in teams %}
+                            <option value="{{ team.id }}">{{ team.name }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
                     </div>
                   <div class="text-center">
                     <input type="submit" class="btn btn-lg bg-gradient-dark btn-lg mt-4 mb-0" value="Register">

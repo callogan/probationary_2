@@ -1,16 +1,160 @@
+/* basic grid constituents */
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: #FFE4B5;
+  border: 1px solid #FFC0CB;
+  border-radius: 20px;
+  box-shadow: 0 2px 12px 0 rgba(255, 0, 127, 0.16);
+  padding: 0;
+  margin: 20px 160px 30px 160px;
+  overflow: hidden;
+}
+
+.grid-item {
+  text-align: left;
+  font-size: 18px;
+  font-weight: 700;
+  border: 1px rgb(194, 192, 194) solid;
+  padding: 20px;
+  border-collapse: collapse;
+}
+
 /* deadline styles */
 
 .deadline-info {
-  padding: 20px;
-  border-radius: 80px;
+  padding: 5px;
+  font-size: 0.9375rem;
+  border-radius: 50px;
 }
 
-.deadline-normal {
-  background-color: green;
-  color: #fff;
-}
-
-.deadline-overdue {
+.project-deadline {
   background-color: red;
   color: #fff;
+  padding-left: 35px;
+  border-radius: 50px;
+  width: 245px;
+}
+
+/* phases styles */
+
+.phase-widget {
+  padding: 10px;
+}
+
+.phase-name {
+  color: white;
+}
+
+.phase-depiction {
+  color: #888;
+  font-style: italic;
+  font-size: 14px;
+  margin-top: 5px;
+  display: inline-block;
+  width: 100%;
+}
+
+.custom-text-color {
+  color: white;
+}
+
+p {
+  margin-bottom: 0;
+}
+
+.flex-container {
+  border: none;
+}
+
+.depiction-box {
+  padding: 10px;
+  border-radius: 3px;
+  background-color: #d4edda;
+  color: #155724;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  text-align: justify;
+  width: 100%;
+}
+
+.custom-heading {
+  font-size: 24px;
+}
+
+/* custom styles for displaying a progress */
+
+.progress-bar {
+  margin-top: 5px;
+  height: 100%;
+  width: 210px;
+  position: relative;
+}
+
+.custom-progress-checking {
+  width: 210px;
+  height: 5px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.custom-progress-bar {
+  border-radius: 4px;
+}
+
+/* countdown styles */
+
+.deadline-container {
+  position: relative;
+  transform: translateX(-20px) translateY(-50px);
+}
+
+circle {
+  fill: none;
+  stroke: #ddd;
+  stroke-width: 5;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+circle:nth-child(2) {
+  stroke: #007bff;
+  stroke-dasharray: 283;
+  stroke-dashoffset: 0;
+  animation: countdown 60s linear infinite;
+}
+
+.widget {
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #FFC0CB;
+  border-radius: 20px;
+  margin: 0px 160px 60px 160px;
+  background-color: #FFE4B5
+}
+
+.dropdown-item {
+  width: 40px;
+}
+
+.card {
+  position: absolute;
+  right: 50px;
+}
+
+canvas#timer_js_0 {
+  width: 300px;
+}
+
+@keyframes countdown {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: {{days_left_offset}};
+  }
 }

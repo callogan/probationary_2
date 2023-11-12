@@ -1,43 +1,34 @@
-{% load static %}
-{% load django_bootstrap5 %}
-
-<!DOCTYPE html>
 <html lang="en">
+<!DOCTYPE html>
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <title>
-    Task maintaining and tackling system - {% block title %}{% endblock %}
+    Assignments monitoring and tackling system - {% block title %}{% endblock %}
   </title>
-
-{#<style>#}
-{#  body {#}
-{#    font-family: 'Noto Sans', sans-serif;#}
-{#  }#}
-{#</style>#}
-
-  <link rel="stylesheet" href="{% static 'css/bootstrap-tagsinput.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'css/commonplace_styles_toolbox.css' %}">
-
-{#  <link href="{% static 'css/custom.css' %}" rel="stylesheet">#}
-  <link href="{% static 'fonts/helios-cond.css' %}" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{% static 'fonts/index.css' %}">
+  {% load static %}
+  {% load django_bootstrap5 %}
+   <!--     Fonts and icons     -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
- <!-- Favicon -->
+   <!-- CSS Files -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/commonplace_styles_toolbox.css' %}">
+  <link href="{% static 'css/custom.css' %}" rel="stylesheet" media="all">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-tagsinput.css' %}">
+
+   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-touch-icon.png' %}">
   <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon/favicon-32x32.png' %}">
   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon/favicon-16x16.png' %}">
   <link rel="manifest" href="{% static 'img/favicon/site.webmanifest' %}">
+
   {% block css_additional %}{% endblock %}
 
   {% bootstrap_css %}
-
-   <link href="{% static 'css/custom.css' %}" rel="stylesheet" media="all">
 
   {% bootstrap_javascript %}
 
@@ -52,32 +43,29 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="{% static 'js/bootstrap-tagsinput.js' %}"></script>
 
-<script>
-$(function() {
+  <script>
+    $(function() {
 
-  $('input[data-role="tagsinput"]').tagsinput({
-    tagClass: 'badge badge-tag'
-  });
+      $('input[data-role="tagsinput"]').tagsinput({
+        tagClass: 'badge badge-tag'
+      });
 
-});
+    });
 
-$('input[data-role="tagsinput"]').on('keydown', function(event) {
+    $('input[data-role="tagsinput"]').on('keydown', function(event) {
 
-  if(event.keyCode === 13) {
-    event.preventDefault();
-    $(this).tagsinput('add', $(this).val());
-    $(this).val('');
-    return false;
-  }
+      if(event.keyCode === 13) {
+        event.preventDefault();
+        $(this).tagsinput('add', $(this).val());
+        $(this).val('');
+        return false;
+      }
 
-});
-</script>
+    });
+  </script>
 
 
   {% include "includes/footer.html" %}
-
-  #код по распределению блоков Проекта
-
 
   {% block js %}{% endblock %}
 

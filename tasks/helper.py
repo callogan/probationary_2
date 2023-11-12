@@ -3,10 +3,10 @@ def calculate_average_progress(projects):
     total_projects = len(projects)
 
     if total_projects == 0:
-        return 0  # Возвращаем 0, если нет проектов
+        return 0
 
     for project in projects:
-        total_progress += project.progress
+        total_progress += project.get_project_progress()
 
     average_progress = total_progress / total_projects
     return average_progress

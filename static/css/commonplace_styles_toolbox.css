@@ -14140,8 +14140,12 @@ pre[class*="language-"] {
 .token.entity {
   cursor: help; }
 
-/* creating and editing icons */
+/* general additional styles */
+body {
+    overflow-x: hidden;
+}
 
+/* creating and editing icons */
 .my-colored-icon {
   fill: green;
 }
@@ -14184,7 +14188,6 @@ pre[class*="language-"] {
 }
 
 /* pseudo element and box model */
-
 .fa.fa-sign-in:before {
     content: "\f2f6";
 }
@@ -14194,7 +14197,6 @@ pre[class*="language-"] {
 }
 
 /* font properties */
-
 a.navbar-brand font-weight-bolder ms-sm-3  {
   font-family: 'Noto Sans', sans-serif;
   font-weight: 700;
@@ -14217,9 +14219,7 @@ li {
   font-size: 17px;
 }
 
-
 /* horizontal linear gradient background */
-
 .bg-gradient-yellow {
   background: linear-gradient(to right, #ff9919, #ffb141, #ffcc33);/* Используйте цвета #ffb41d и #ffcc33 здесь */
 }
@@ -14251,6 +14251,7 @@ li {
 .progress-augmenting {
    width: 200px !important;
    height: 5px !important;
+   background-color: #fff !important;
 }
 
 .progress-bar-compulsory {
@@ -14291,11 +14292,15 @@ li {
   margin: 0;
 }
 
-.custom-dropdown-item-initial {
-  padding-bottom: 0.10rem;
+.task-deadline {
+  background-color: red !important;
+  color: #fff !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  border-radius: 50px !important;
 }
 
-/* general additional styles */
-body {
-    overflow-x: hidden;
+/* dropdown styles */
+.custom-dropdown-item-initial {
+  padding-bottom: 0.10rem;
 }

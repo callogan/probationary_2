@@ -1,0 +1,12 @@
+.team-members {
+  display: none;
+}
+
+.team input:checked ~ .team-members {
+  display: block;
+}
+
+.team input:checked ~ .col .form-check input:checked ~ .team-members,
+.team input:checked ~ .col .form-check input[value] ~ .team-members {
+  display: block;
+}

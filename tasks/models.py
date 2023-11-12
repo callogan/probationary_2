@@ -1,9 +1,7 @@
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser, User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import QuerySet, Q, Count
-from django.db.models.signals import post_save, pre_save
-from django.dispatch import receiver
 from taggit.managers import TaggableManager
 
 
@@ -36,7 +34,6 @@ class Position(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=255)
-    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='teams_joined', blank=True)
 
     def __str__(self) -> str:
         return self.name
@@ -57,11 +54,11 @@ class Worker(AbstractUser):
         on_delete=models.CASCADE,
         related_name="workers",
         blank=True,
-        null=True
+        null=True,
     )
     teams = models.ManyToManyField(
         Team,
-        related_name="workers",
+        related_name="members",
         blank=True,
     )
 
@@ -69,14 +66,11 @@ class Worker(AbstractUser):
         "auth.Permission",
         verbose_name="user permissions",
         blank=True,
-        related_name="worker_permissions"
+        related_name="worker_permissions",
     )
 
     groups = models.ManyToManyField(
-        "auth.Group",
-        verbose_name="groups",
-        blank=True,
-        related_name="worker_groups"
+        "auth.Group", verbose_name="groups", blank=True, related_name="worker_groups"
     )
     rating_points = models.IntegerField(default=0)
 
@@ -84,48 +78,43 @@ class Worker(AbstractUser):
         return f"{self.username} ({self.first_name} {self.last_name})"
 
     def finished_tasks(self) -> QuerySet:
-        return self.tasks.annotate(
-            assignees_count=Count('assignees')
-        ).filter(
-            is_completed=True,
-            assignees_count__gt=0
-        ).distinct()
+        return (
+            self.tasks.annotate(assignees_count=Count("assignees"))
+            .filter(is_completed=True, assignees_count__gt=0)
+            .distinct()
+        )
 
     def underway_tasks(self) -> QuerySet:
-        return self.tasks.annotate(
-            assignees_count=Count('assignees')
-        ).filter(
-            Q(is_completed=False) & Q(assignees_count__gt=0)
-        ).distinct()
+        return (
+            self.tasks.annotate(assignees_count=Count("assignees"))
+            .filter(Q(is_completed=False) & Q(assignees_count__gt=0))
+            .distinct()
+        )
 
 
 class WorkerEvaluation(models.Model):
     SCORE_CHOICES = (
-        (1, '1'),
-        (2, '2'),
-        (3, '3'),
-        (4, '4'),
-        (5, '5'),
+        (1, "1"),
+        (2, "2"),
+        (3, "3"),
+        (4, "4"),
+        (5, "5"),
     )
-    evaluator = models.ForeignKey(Worker, on_delete=models.CASCADE, related_name='reviews_by')
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE, related_name='reviews_of')
+    evaluator = models.ForeignKey(
+        Worker, on_delete=models.CASCADE, related_name="reviews_by"
+    )
+    worker = models.ForeignKey(
+        Worker, on_delete=models.CASCADE, related_name="reviews_of"
+    )
     score = models.IntegerField(choices=SCORE_CHOICES)
 
 
 class Project(models.Model):
-    PRIORITY_CHOICES = [
-        ("U", "Urgent"),
-        ("A", "Average"),
-        ("S", "Side-tracked")
-    ]
+    PRIORITY_CHOICES = [("U", "Urgent"), ("A", "Average"), ("S", "Side-tracked")]
 
     name = models.CharField(max_length=255)
     depiction = models.TextField()
-    priority = models.CharField(
-        max_length=1,
-        choices=PRIORITY_CHOICES,
-        default="S"
-    )
+    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES, default="S")
     time_constraints = models.DateField()
     project_category = models.ForeignKey(
         ProjectCategory,
@@ -134,22 +123,21 @@ class Project(models.Model):
     )
 
     team = models.ForeignKey(
-        Team,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name="projects"
+        Team, on_delete=models.CASCADE, blank=True, null=True, related_name="projects"
     )
     budget = models.DecimalField(decimal_places=2, max_digits=8, default=0)
-    funds_used = models.DecimalField(decimal_places=2, max_digits=8, default=0, blank=True)
-    progress = models.DecimalField(decimal_places=2, max_digits=5, null=True, blank=True, default=0)
+    funds_used = models.DecimalField(
+        decimal_places=2, max_digits=8, default=0, blank=True
+    )
+    progress = models.DecimalField(
+        decimal_places=2, max_digits=5, null=True, blank=True, default=0
+    )
     tags = TaggableManager(blank=True)
 
     def get_project_progress(self):
         total_progress = 0
         number_of_blocks = 0
 
-        # Получаем все блоки, относящиеся к текущему проекту
         blocks = self.projectblock_set.all()
 
         for block in blocks:
@@ -164,18 +152,15 @@ class Project(models.Model):
 
         return round(avg_progress, 2)
 
-        # Метод для определения текущей фазы проекта
     def get_current_phase(self):
         if self.progress == 0:
-            return "Подготовительная фаза"
+            return "Initiation and planning phase"
         elif 0 < self.progress < 100:
-            return "Фаза реализации"
+            return "Execution phase"
         elif self.progress == 100:
-            return "Фаза завершения"
+            return "Implementation and closure phase"
         else:
-            return "Неизвестная фаза"
-
-    # Другие поля и методы вашей модели...
+            return "Unknown phase"
 
     def __str__(self) -> str:
         return self.name
@@ -197,7 +182,7 @@ class ProjectBlock(models.Model):
             {"name": "Testing", "index": 3},
             {"name": "Infrastructure setup", "index": 4},
             {"name": "Documentation", "index": 5},
-            {"name": "UX/design", "index": 6}
+            {"name": "UX/design", "index": 6},
         ]
 
     def get_block_progress(self):
@@ -210,49 +195,27 @@ class ProjectBlock(models.Model):
         return f"Project name: {self.project} (project block: {self.name})"
 
 
-    # def get_block_progress(self):
-    #     total_tasks = self.task_set.count()  # Общее количество заданий в блоке
-    #     completed_tasks = self.task_set.filter(is_completed=True).count()  # Количество завершенных заданий в блоке
-    #
-    #     if total_tasks > 0:
-    #         return round((completed_tasks / total_tasks) * 100, 2)
-    #     else:
-    #         return 0.0
-
-
 class Task(models.Model):
-    PRIORITY_CHOICES = [
-        ("U", "Urgent"),
-        ("A", "Average"),
-        ("S", "Side-tracked")
-    ]
+    PRIORITY_CHOICES = [("U", "Urgent"), ("A", "Average"), ("S", "Side-tracked")]
 
     name = models.CharField(max_length=255)
     depiction = models.TextField()
     time_constraints = models.DateField()
     is_completed = models.BooleanField(default=False)
-    priority = models.CharField(
-        max_length=1,
-        choices=PRIORITY_CHOICES,
-        default="S"
-    )
+    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES, default="S")
 
     task_type = models.ForeignKey(
-        TaskType,
-        on_delete=models.CASCADE,
-        related_name="tasks"
+        TaskType, on_delete=models.CASCADE, related_name="tasks"
     )
     assignees = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="tasks",
-        blank=True
+        settings.AUTH_USER_MODEL, related_name="tasks", blank=True
     )
 
     user_permissions = models.ManyToManyField(
         "auth.Permission",
         verbose_name="user permissions",
         blank=True,
-        related_name="task_permissions"
+        related_name="task_permissions",
     )
 
     tags = TaggableManager(blank=True)

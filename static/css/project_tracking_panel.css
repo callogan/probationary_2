@@ -1,19 +1,7 @@
-/*body {*/
-/*    margin: 20px 200px 30px 200px;*/
-/*}*/
-
-body {
-    overflow-x: hidden;
-}
-
-/*.parental-widget {*/
-/*  padding: 20px 140px 30px 140px;*/
-/*}*/
-
-
 .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  background-color: #ffb41d;
   border: 1px solid #FFC0CB;
   border-radius: 20px;
   box-shadow: 0 2px 12px 0 rgba(255, 0, 127, 0.16);
@@ -35,6 +23,29 @@ body {
     text-align: center;
     font-size: 50px;
 }
+
+
+.w-full {
+  width: 100%;
+}
+
+.row {
+  margin-bottom: 10px;
+}
+
+.col-7, .pt-2, .ps-0 {
+  font-size: 17px;
+}
+
+
+.progress {
+  position: relative;
+}
+
+.progress-percentage span {
+  flex-basis: 100%;
+}
+
 
 .progress-bar {
   margin: 0;
@@ -103,33 +114,9 @@ body {
   width: 300px;
 }
 
-.w-full {
-  width: 100%;
-}
-
-.row {
-  margin-bottom: 10px;
-}
-
-.col-7, .pt-2, .ps-0 {
-  font-size: 17px;
-}
-
-.grid-container {
-  background-color: #ffb41d;
-}
-
 .progress-percentage {
   display: flex;
   flex-wrap: wrap;
-}
-
-.progress-percentage span {
-  flex-basis: 100%;
-}
-
-.progress {
-  position: relative;
 }
 
 .progress-bar-custom {
@@ -144,12 +131,6 @@ body {
 .progress-info-supplemental {
   margin-bottom: 5px;
 }
-
-/*.col-7,*/
-/*.col-5 {*/
-/*  display: inline-block;*/
-/*  vertical-align: middle;*/
-/*}*/
 
 .total-number {
   margin-bottom: 30px;

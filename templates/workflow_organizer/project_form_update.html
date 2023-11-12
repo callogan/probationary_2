@@ -4,7 +4,7 @@
 {% load crispy_forms_tags %}
 
 
-{% block title %} Update Project {% endblock %}
+{% block title %} Update project {% endblock %}
 
 {% block content %}
 {% include "includes/sidebar.html" %}
@@ -16,14 +16,14 @@
       </div>
     </header>
 
-    <div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
-      <section class="py-sm-7 py-5 position-relative">
+    <section class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
+      <div class="py-sm-7 py-5 position-relative">
         <div class="container">
           <div class="row">
             <div class="col-12 mx-auto">
               <div class="col-lg-9 col-md-9 z-index-2 position-relative px-md-1 px-sm-5 mx-auto mb-2">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                  <h3 class="mb-2 mx-auto font-weight-bold"> Update Project </h3>
+                  <h3 class="mb-2 mx-auto font-weight-bold"> Update project </h3>
                 </div>
                 <br><br>
                 <form role="form" method="post" action="">
@@ -42,7 +42,7 @@
                       {{ form.budget|as_crispy_field }}
                     </div>
                     {% if object %}
-                    <div class="col mt-n4 project-form-custom">
+                    <div class="col mt-2 project-form-custom">
                       {{ form.funds_used|as_crispy_field }}
                     </div>
                     {% endif %}
@@ -51,12 +51,6 @@
                     <div class="col mt-n2">
                       {{ form.time_constraints|as_crispy_field }}
                     </div>
-                    {% if object %}
-                    <div class="col mt-n2">
-                      <label>Progress</label>
-                      {{ form.progress|as_crispy_field }}
-                    </div>
-                    {% endif %}
                   </div>
                   {{ form.depiction|as_crispy_field }}
                   <div class="form-group row">
@@ -68,19 +62,11 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <div class="col mt-2">
-                      <div style="display: inline-block; margin-left: 10px;">
-                        <p class="font-weight-bold small">Projects' blocks</p>
+                    <div class="col-3 mt-2">
+                      <div style="display: inline-block; margin-left: 25px;">
+                        <p class="font-weight-bold small">Project blocks</p>
                       </div>
-                      <div style="display: inline-block; margin-left: 125px;">
-                        <p class="font-weight-bold small">Tasks' number in block</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="container">
-                    <div class="row mb-2">
-                      <div class="col">
-<!--                        /існуюючі блоки/-->
+                      <div class="form-check">
                         {% for block in existing_blocks %}
                           <div class="form-check">
                             <input class="form-check-input mb-4" type="checkbox" name="existing_project_blocks" value="{{ block.id }}" data-block-id="{{ block.id }}" checked>
@@ -88,8 +74,7 @@
                           </div>
                         {% endfor %}
                       </div>
-<!--                      новостворені блоки-->
-                      <div class="col">
+                      <div class="form-check">
                         {% for block in predefined_blocks %}
                           {% if block.name not in existing_names %}
                             <div class="form-check">
@@ -99,26 +84,43 @@
                           {% endif %}
                         {% endfor %}
                       </div>
-                      <div class="col-2 mb-2 p-0">
+                    </div>
+                    <div class="col-3 mt-2">
+                      <div style="display: inline-block; margin-left: 30px;">
+                        <p class="font-weight-bold small">Total tasks</p>
+                      </div>
+                      <div class="form-check">
                         {% for block in existing_blocks %}
-                          <label for="block_{{ block.id }}_total_tasks">Total Tasks:</label>
                           <input type="number" id="block_{{ block.id }}_total_tasks" name="block_{{ block.id }}_total_tasks" value="{{ block.total_tasks }}" class="form-control mb-2" data-block-id="{{ block.id }}">
-                          <label for="block_{{ block.id }}_completed_tasks">Completed Tasks:</label>
+                        {% endfor %}
+                      </div>
+                      <div class="form-check">
+                        {% for block in predefined_blocks %}
+                          {% if block.name not in existing_names %}
+                            <input type="number" id="new_block_{{ block.index }}_total_tasks" name="new_block_{{ block.index }}_total_tasks" value="{{ block.total_tasks }}" class="form-control mb-2" data-block-id="{{ block.id }}">
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="col-3 mt-2">
+                      <div style="display: inline-block; margin-left: 30px;">
+                        <p class="font-weight-bold small">Completed tasks</p>
+                      </div>
+                      <div class="form-check">
+                        {% for block in existing_blocks %}
                           <input type="number" id="block_{{ block.id }}_completed_tasks" name="block_{{ block.id }}_completed_tasks" value="{{ block.completed_tasks }}" class="form-control mb-2" data-block-id="{{ block.id }}">
                         {% endfor %}
                       </div>
-                      {# Второй цикл для создания новых заданий #}
-                      <div class="col-2 mb-2 p-0">
-                          {% for block in predefined_blocks %}
-                            {% if block.name not in existing_names %}
-                              <label for="new_block_{{ block.index }}_total_tasks">Total Tasks:</label>
-                              <input type="number" name="new_block_{{ block.index }}_total_tasks" class="form-control mb-2" data-block-id="{{ block.index }}">
-                              <label for="new_block_{{ block.index }}_total_tasks">Completed Tasks:</label>
-                              <input type="number" name="new_block_{{ block.index }}_completed_tasks"  class="form-control mb-2" data-block-id="{{ block.index }}">
-                            {% endif %}
-                          {% endfor %}
+                      <div class="form-check">
+                        {% for block in predefined_blocks %}
+                          {% if block.name not in existing_names %}
+                            <input type="number" id="new_block_{{ block.index}}_completed_tasks" name="new_block_{{ block.index }}_completed_tasks" value="{{ block.completed_tasks }}" class="form-control mb-2" data-block-id="{{ block.id }}">
+                          {% endif %}
+                        {% endfor %}
                       </div>
-                      <div class="col-2 mb-2">
+                    </div>
+                    <div class="col-2 mb-2 mt-2">
+                      <div class="form-check">
                         {{ form.priority|as_crispy_field }}
                       </div>
                     </div>
@@ -132,67 +134,8 @@
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   </div>
-
-<!-- Подключение JS перед endblock -->
-<script>
-  // Переменная для id активного чекбокса
-  let activeCheckboxId;
-
-  // Получаем все чекбоксы
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-  // Обработчик на чекбоксы
-  checkboxes.forEach(checkbox => {
-
-    checkbox.onclick = () => {
-
-      // Получаем ID или index
-      if(checkbox.id) {
-        activeCheckboxId = checkbox.id;
-      } else if(checkbox.index) {
-        activeCheckboxId = checkbox.index;
-      }
-
-      // Выделяем поля
-      highlightFields(activeCheckboxId);
-
-    };
-
-  });
-
-
-  // Получаем все поля ввода
-  const fields = document.querySelectorAll('.task-field');
-
-  // Обработчик на поля ввода
-  fields.forEach(field => {
-
-    field.addEventListener('input', () => {
-
-      // Получаем ID или index поля ввода
-      let fieldId;
-
-      if(field.id) {
-        fieldId = field.id;
-      } else if(field.index) {
-        fieldId = field.index;
-      }
-
-      // Проверка на соответствие
-      if(activeCheckboxId && fieldId !== activeCheckboxId) {
-        showError('Данные не соответствуют чекбоксу');
-        return;
-      }
-
-      // Выделяем поля
-      highlightFields(activeCheckboxId);
-
-    });
-
-  });
-</script>
 
 {% endblock content %}

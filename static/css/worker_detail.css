@@ -1,28 +1,24 @@
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 3fr; /* Деление на 1/3 и 2/3 ширины */
-  grid-template-rows: auto auto; /* Авто высота для обоих верхних виджетов */
-  /*border: 10px yellow solid;*/
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: auto auto;
   padding: 0;
   margin: 20px 160px 30px 160px;
 }
 
 .widget-left {
-  /*background-color: lightgray;*/
   padding: 20px;
 }
 
 .widget-right {
-  /*background-color: lightblue;*/
   padding: 20px;
 }
 
 .widget-full-width {
-  /*background-color: cornflowerblue;*/
   padding: 20px;
-  grid-column: span 2; /* Занимает 2 столбца */
+  grid-column: span 2;
   display: grid;
-  grid-template-rows: auto auto; /* Авто высота для header и body */
+  grid-template-rows: auto auto;
   width: 100%;
 }
 
@@ -56,9 +52,9 @@
 }
 
 .widget-container {
-  margin-bottom: 20px; /* Отступ между виджетами */
-  background-color: #f5f5dc; /* Бежевый цвет фона */
-  padding: 10px; /* Опционально: добавление отступов внутри виджетов */
+  margin-bottom: 20px;
+  background-color: #f5f5dc;
+  padding: 10px;
   border-radius: 20px 20px 20px 20px;
 }
 
@@ -67,13 +63,13 @@ a.my-2 mx-3 d-flex cursor-pointer align-items-center {
 }
 
 .orange {
- background-color: #FFA500;
+ background-color: #FFA500 !important;
 }
 
 .green {
- background-color: #008C45;
+ background-color: #008C45 !important;
 }
 
 .red {
- background-color: red;
+ background-color: red !important;
 }

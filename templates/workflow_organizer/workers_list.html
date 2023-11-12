@@ -5,156 +5,165 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/workers_list.css' %}">
 {% endblock %}
 
+{% block title %} Workers list {% endblock %}
+
 {% block content %}
 
 {% include "includes/sidebar.html" %}
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Workers list</title>
-  <!-- Add your CSS and Bootstrap CDN links here -->
-</head>
-<body>
   <div class="container-fluid custom-margin-top custom-margin-bottom">
-  <div class="row mt-10">
-    <div class="col-12">
-      <h1 class="text-primary text-center mb-4 font-weight-bold">Workers hierarchical stratification</h1>
-      <h5 class="text-center mb-6 fw-semibold fs-3">Information about workers rating</h5>
+    <div class="row mt-10">
+      <div class="col-12">
+        <h1 class="text-primary text-center mb-4 font-weight-bold">Workers hierarchical stratification</h1>
+        <h5 class="text-center mb-6 fw-semibold fs-3">Information about workers rating</h5>
+      </div>
     </div>
   </div>
-</div>
-<section class="pt-sm-8 pb-5 mt-n5 position-relative bg-gradient-violet overflow-hidden">
-  <div class="position-absolute w-100 z-inde-1 top-0 mt-n3">
-    <svg width="100%" viewBox="0 -2 1920 157" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-      <title>wave-down</title>
-      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Artboard" fill="#FFFFFF" fill-rule="nonzero">
-          <g id="wave-down">
-            <path d="M0,60.8320331 C299.333333,115.127115 618.333333,111.165365 959,47.8320321 C1299.66667,-15.5013009 1620.66667,-15.2062179 1920,47.8320331 L1920,156.389409 L0,156.389409 L0,60.8320331 Z" id="Path-Copy-2" transform="translate(960.000000, 78.416017) rotate(180.000000) translate(-960.000000, -78.416017)"></path>
+  <section class="pt-sm-8 pb-5 mt-n5 position-relative bg-gradient-violet overflow-hidden">
+    <div class="position-absolute w-100 z-inde-1 top-0 mt-n3">
+      <svg width="100%" viewBox="0 -2 1920 157" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <title>wave-down</title>
+        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+          <g id="Artboard" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="wave-down">
+              <path d="M0,60.8320331 C299.333333,115.127115 618.333333,111.165365 959,47.8320321 C1299.66667,-15.5013009 1620.66667,-15.2062179 1920,47.8320331 L1920,156.389409 L0,156.389409 L0,60.8320331 Z" id="Path-Copy-2" transform="translate(960.000000, 78.416017) rotate(180.000000) translate(-960.000000, -78.416017)"></path>
+            </g>
           </g>
         </g>
-      </g>
-    </svg>
-  </div>
-  <div class="container-fluid pt-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-8 col-md-6 mb-4">
-        <div class="card pb-4" style="background-color: #ffb41d; border: 1px solid #FFC0CB; border-radius: 20px; box-shadow: 0 2px 12px 0 rgba(255, 0, 127, 0.16);">
-          <div class="card-header pb-0 text-center">
-            <h5 class="mx-3" style="color: #027cc7;font-size: 25px; font-weight:bold;">Top frontrunners</h5>
-          </div>
-          <div class="card-body p-3">
-            <div class="row justify-content-center">
-              {% if first_place_worker %}
-                <div class="col-md-4 mb-3 text-center">
-                  <a href="{% url 'workflow_organizer:worker-detail' pk=first_place_worker.id %}"
-                     class="text-muted avatar-sm mt-2"
-                     style="border-radius: 50%; overflow: hidden;"
-                     title="{{ first_place_worker.first_name }} {{ first_place_worker.last_name }}">
-                    <img class="mt-n2 ms-1" style="border-radius: 50% !important; width: 80px; height: 80px; object-fit: cover;" src="{% static 'img/team/'|add:first_place_worker.username|add:'.jpeg' %}">
-                  </a>
-                  <div class="text-center mt-2 mb-2">
-                    <span style="font-size: 20px">🥇</span>
+      </svg>
+    </div>
+    <div class="container-fluid pt-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-6 mb-4">
+          <div class="card pb-4" style="background-color: #ffb41d; border: 1px solid #FFC0CB; border-radius: 20px; box-shadow: 0 2px 12px 0 rgba(255, 0, 127, 0.16);">
+            <div class="card-header pb-0 text-center">
+              <h5 class="mx-3" style="color: #027cc7;font-size: 25px; font-weight:bold;">Top frontrunners</h5>
+            </div>
+            <div class="card-body p-3">
+              <div class="row justify-content-center">
+                {% if first_place_worker %}
+                  <div class="col-md-4 mb-3 text-center">
+                    <a href="{% url 'workflow_organizer:worker-detail' pk=first_place_worker.id %}"
+                       class="text-muted avatar-sm mt-2"
+                       style="border-radius: 50%; overflow: hidden;"
+                       title="{{ first_place_worker.first_name }} {{ first_place_worker.last_name }}">
+                      <img class="mt-n2 ms-1" style="border-radius: 50% !important; width: 80px; height: 80px; object-fit: cover;"
+                           src="{% static 'img/team/'|add:first_place_worker.username|add:'.jpeg' %}"
+                           id="avatar-{{ worker.id }}-1"
+                           onerror="placeholderAvatar(this)">
+                    </a>
+                    <div class="text-center mt-2 mb-2">
+                      <span style="font-size: 20px">🥇</span>
+                    </div>
+                    <div class="text-center mb-2">
+                      <p class="fs-5" style="margin: 3px; display: inline; font-size: 20px;">{{ first_place_worker.first_name }} {{ first_place_worker.last_name }}</p>
+                    </div>
+                    <div class="text-center mb-2">
+                      <p style="margin: 3px; display: inline; font-size: 20px;">{{ first_place_worker.rating_points }} points</p>
+                    </div>
                   </div>
-                  <div class="text-center mb-2">
-                    <p class="fs-5" style="margin: 3px; display: inline; font-size: 20px;">{{ first_place_worker.first_name }} {{ first_place_worker.last_name }}</p>
+                {% endif %}
+                {% if second_place_worker %}
+                  <div class="col-md-4 mb-3 text-center">
+                    <a href="{% url 'workflow_organizer:worker-detail' pk=second_place_worker.id %}"
+                       class="text-muted avatar-sm mt-2"
+                       style="border-radius: 50%; overflow: hidden;"
+                       title="{{ second_place_worker.first_name }} {{ second_place_worker.last_name }}">
+                      <img class="mt-n2 ms-1" style="border-radius: 50% !important; width: 80px; height: 80px; object-fit: cover;"
+                           src="{% static 'img/team/'|add:second_place_worker.username|add:'.jpeg' %}"
+                           id="avatar-{{ worker.id }}-2"
+                           onerror="placeholderAvatar(this)">
+                    </a>
+                    <div class="text-center mt-2 mb-2">
+                      <span style="font-size: 20px">🥈</span>
+                    </div>
+                    <div class="text-center mb-2">
+                      <p style="margin: 3px; display: inline; font-size: 20px;">{{ second_place_worker.first_name }} {{ second_place_worker.last_name }}</p>
+                    </div>
+                    <div class="text-center mb-2">
+                      <p style="margin: 3px; display: inline; font-size: 20px;">{{ second_place_worker.rating_points }} points</p>
+                    </div>
                   </div>
-                  <div class="text-center mb-2">
-                    <p style="margin: 3px; display: inline; font-size: 20px;">{{ first_place_worker.rating_points }} points</p>
+                {% endif %}
+                {% if third_place_worker %}
+                  <div class="col-md-4 mb-3 text-center">
+                    <a href="{% url 'workflow_organizer:worker-detail' pk=third_place_worker.id %}"
+                       class="text-muted avatar-sm mt-2"
+                       style="border-radius: 50%; overflow: hidden;"
+                       title="{{ third_place_worker.first_name }} {{ third_place_worker.last_name }}">
+                      <img class="mt-n2 ms-1" style="border-radius: 50% !important; width: 80px; height: 80px; object-fit: cover;"
+                           src="{% static 'img/team/'|add:third_place_worker.username|add:'.jpeg' %}"
+                           id="avatar-{{ worker.id }}-3"
+                           onerror="placeholderAvatar(this)">
+                    </a>
+                    <div class="text-center mt-2 mb-2">
+                      <span style="font-size: 20px">🥉</span>
+                    </div>
+                    <div class="text-center mb-2">
+                      <p style="margin: 3px; display: inline; font-size: 20px;">{{ third_place_worker.first_name }} {{ third_place_worker.last_name }}</p>
+                    </div>
+                    <div class="text-center mb-2">
+                      <p style="margin: 3px; display: inline; font-size: 20px;">{{ third_place_worker.rating_points }} points</p>
+                    </div>
                   </div>
-                </div>
-              {% endif %}
-              {% if second_place_worker %}
-                <div class="col-md-4 mb-3 text-center">
-                  <a href="{% url 'workflow_organizer:worker-detail' pk=second_place_worker.id %}"
-                     class="text-muted avatar-sm mt-2"
-                     style="border-radius: 50%; overflow: hidden;"
-                     title="{{ second_place_worker.first_name }} {{ second_place_worker.last_name }}">
-                    <img class="mt-n2 ms-1" style="border-radius: 50% !important; width: 80px; height: 80px; object-fit: cover;" src="{% static 'img/team/'|add:second_place_worker.username|add:'.jpeg' %}">
-                  </a>
-                  <div class="text-center mt-2 mb-2">
-                    <span style="font-size: 20px">🥈</span>
-                  </div>
-                  <div class="text-center mb-2">
-                    <p style="margin: 3px; display: inline; font-size: 20px;">{{ second_place_worker.first_name }} {{ second_place_worker.last_name }}</p>
-                  </div>
-                  <div class="text-center mb-2">
-                    <p style="margin: 3px; display: inline; font-size: 20px;">{{ second_place_worker.rating_points }} points</p>
-                  </div>
-                </div>
-              {% endif %}
-              {% if third_place_worker %}
-                <div class="col-md-4 mb-3 text-center">
-                  <a href="{% url 'workflow_organizer:worker-detail' pk=third_place_worker.id %}"
-                     class="text-muted avatar-sm mt-2"
-                     style="border-radius: 50%; overflow: hidden;"
-                     title="{{ third_place_worker.first_name }} {{ third_place_worker.last_name }}">
-                    <img class="mt-n2 ms-1" style="border-radius: 50% !important; width: 80px; height: 80px; object-fit: cover;" src="{% static 'img/team/'|add:third_place_worker.username|add:'.jpeg' %}">
-                  </a>
-                  <div class="text-center mt-2 mb-2">
-                    <span style="font-size: 20px">🥉</span>
-                  </div>
-                  <div class="text-center mb-2">
-                    <p style="margin: 3px; display: inline; font-size: 20px;">{{ third_place_worker.first_name }} {{ third_place_worker.last_name }}</p>
-                  </div>
-                  <div class="text-center mb-2">
-                    <p style="margin: 3px; display: inline; font-size: 20px;">{{ third_place_worker.rating_points }} points</p>
-                  </div>
-                </div>
-              {% endif %}
+                {% endif %}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="container-fluid">
-    <div class="row justify-content-center">
-      <div class="col-lg-8 col-md-6 mb-4">
-        <div class="card" style="background-color: #9d3303;border: 1px solid #069248;border-radius: 20px;box-shadow: 0 2px 12px 0 rgba(6, 146, 72, .16);">
-          <div class="card-header pb-0 text-center">
-            <h5 class="mx-3" style="color: #ffb41d; font-size: 25px; font-weight: bold;">Other workers</h5>
-          </div>
-          <div class="card-body p-3">
-            <ol start="4">
-              {% for worker in workers|slice:"3:" %}
-                <li style="font-size: 20px;" class="mt-3 fw-normal username">
-                 <div class="container">
-                   <div class="row" style="margin-bottom: 30px;">
-                     <div class="col-1">
-                       <a href="{% url 'workflow_organizer:worker-detail' pk=user.id %}"
-                        class="text-muted avatar-sm"
-                        title="{{ user.first_name }} {{ user.last_name }}"
-                        style="border-radius: 50%; overflow: hidden;"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom">
-                        <p style="margin: 3px; display: inline;">
-                          <span style="margin-right: 10px; display: inline-block;">
-                              <img class="mt-n2 ms-1" style="border-radius: 50% !important; width: 60px; height: 60px; object-fit: cover; border: none;" src="{% static 'img/team/'|add:worker.username|add:'.jpeg' %}">
-                          </span>
-                        </p>
-                      </a>
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-6 mb-4">
+          <div class="card" style="background-color: #9d3303;border: 1px solid #069248;border-radius: 20px;box-shadow: 0 2px 12px 0 rgba(6, 146, 72, .16);">
+            <div class="card-header pb-0 text-center">
+              <h5 class="mx-3" style="color: #ffb41d; font-size: 25px; font-weight: bold;">Other workers</h5>
+            </div>
+            <div class="card-body p-3">
+              <ol start="4">
+                {% for worker in workers|slice:"3:" %}
+                  <li style="font-size: 20px;" class="mt-3 fw-normal username">
+                   <div class="container">
+                     <div class="row" style="margin-bottom: 30px;">
+                       <div class="col-1">
+                         <a href="{% url 'workflow_organizer:worker-detail' pk=user.id %}"
+                          class="text-muted avatar-sm"
+                          title="{{ user.first_name }} {{ user.last_name }}"
+                          style="border-radius: 50%; overflow: hidden;"
+                          data-bs-toggle="tooltip" data-bs-placement="bottom">
+                          <p style="margin: 3px; display: inline;">
+                            <span style="margin-right: 10px; display: inline-block;">
+                                <img class="mt-n2 ms-1" style="border-radius: 50% !important; width: 60px; height: 60px; object-fit: cover; border: none;"
+                                     src="{% static 'img/team/'|add:worker.username|add:'.jpeg' %}"
+                                     id="avatar-{{ worker.id }}-4"
+                                     onerror="placeholderAvatar(this)">
+                            </span>
+                          </p>
+                          <script>
+                            function placeholderAvatar(img) {
+                              img.src = "{% static 'img/team/avatar-placeholder.jpeg' %}";
+                            }
+                          </script>
+                        </a>
+                       </div>
+                       <div class="col-3 pt-2" style="padding-left: 20px;">
+                        <span class="fw-normal username">{{ worker.first_name }} {{ worker.last_name }}</span>
+                       </div>
+                      <div class="col-3 pt-2">
+                        <span class="fw-normal username" style="margin-left: 5px;">{{ worker.rating_points }} points</span>
+                      </div>
                      </div>
-                     <div class="col-3 pt-2" style="padding-left: 20px;">
-                      <span class="fw-normal username">{{ worker.first_name }} {{ worker.last_name }}</span>
-                     </div>
-                    <div class="col-3 pt-2">
-                      <span class="fw-normal username" style="margin-left: 5px;">{{ worker.rating_points }} points</span>
-                    </div>
                    </div>
-                 </div>
-                </li>
-              {% endfor %}
-            </ol>
+                  </li>
+                {% endfor %}
+              </ol>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div style="height: 100px;"></div>
+    <div style="height: 100px;"></div>
     <div class="position-absolute w-100 bottom-0">
       <svg width="100%" viewBox="0 -1 1920 166" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <title>wave-up</title>
@@ -167,8 +176,11 @@
         </g>
       </svg>
     </div>
+    <script>
+      function placeholderAvatar(img) {
+        img.src = "{% static 'img/team/avatar-placeholder.jpeg' %}";
+      }
+    </script>
   </section>
-</body>
-</html>
 
 {% endblock %}

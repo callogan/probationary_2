@@ -24,7 +24,7 @@
                   <h3 class="mb-2 font-weight-bold assignment-name">{{ task.name }}</h3>
                   <li style="box-shadow: 0 0.3125rem 0.625rem 0 rgba(51, 153, 255, 0.32)" class="card dropdown dropdown-hover mx-2">
                     <a class="my-2 mx-3 d-flex cursor-pointer align-items-center" id="dropdownMenuDocs" data-bs-toggle="dropdown" aria-expanded="false">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-menu-button-wide" viewBox="0 0 16 16">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-menu-button-wide" viewBox="0 0 16 16">
                         <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v2A1.5 1.5 0 0 1 14.5 5h-13A1.5 1.5 0 0 1 0 3.5v-2zM1.5 1a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-13z"/>
                         <path d="M2 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm10.823.323-.396-.396A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0zM0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2H1zm14-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2h14zM2 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
                       </svg>
@@ -82,7 +82,9 @@
                                  class="text-muted avatar-sm text-decoration-none"
                                  title="{{ assignee.first_name }} {{ assignee.last_name }}">
                                  <img style="border-radius: 50% !important; object-fit: cover; width: 50px; height: 50px;"
-                                   src="{% static 'img/team/'|add:assignee.username|add:'.jpeg' %}">
+                                      src="{% static 'img/team/'|add:assignee.username|add:'.jpeg' %}"
+                                      id="avatar-{{ worker.id }}"
+                                      onerror="placeholderAvatar(this)">
                                  <p style="margin: 5px; display: inline">{{ assignee.first_name }} {{assignee.last_name }}</p>
                                 </a>
                               </div>
@@ -116,7 +118,10 @@
                           <path fill="red" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
                           <path fill="red" d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
                         </svg>
-                        {{ task.time_constraints }}
+                        <span>{{ task.time_constraints }}</span>
+                        {% if passed_deadline %}
+                          <span class="task-deadline" style="margin-left: 10px;">The task is overdue!</span>
+                        {% endif %}
                       </td>
                     </tr>
                     <tr>
@@ -146,13 +151,18 @@
                 </table>
                 <hr class="hr mb-4" style="border-bottom: 1px solid rgba(0, 0, 0, .5)">
                 <div class="row mb-4">
-                  <h5 class="h5">Queue</h5>
+                  <h5 class="h5">To do</h5>
                   <p>{{ task.depiction }}</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <script>
+          function placeholderAvatar(img) {
+            img.src = "{% static 'img/team/avatar-placeholder.jpeg' %}";
+          }
+        </script>
       </section>
     </div>
   </div>

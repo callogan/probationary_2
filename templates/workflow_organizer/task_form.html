@@ -63,34 +63,6 @@
                   <a href="{% url 'workflow_organizer:task-panel' %}" class="btn bg-gradient-secondary btn-lg mt-4 mb-0 mx-3">Cancel</a>
                 </div>
                 </form>
-              <script>
-                  // Код обработчика события для кнопки
-                  $('#test-btn').click(function() {
-                      // получаем теги в переменную
-                      var tags = $('#tags-field').tagsinput('items');
-
-                      // выводим теги и добавляем стили
-                      var tagsOutput = $('#tags-output');
-                      tagsOutput.empty(); // Очищаем содержимое перед добавлением новых тегов
-
-                      // Добавляем стили для тегов и вставляем их в контейнер
-                      tags.forEach(function(tag) {
-                          var tagElement = $('<span>', {
-                              class: 'badge badge-primary tag', // Здесь можно указать нужные классы
-                              text: tag
-                          });
-                          tagsOutput.append(tagElement);
-                      });
-                  });
-
-                  // Обработчик события для предотвращения отправки формы при нажатии Enter
-                  $('#tags-field').keypress(function(event) {
-                      if (event.which === 13) {
-                          event.preventDefault();
-                          event.stopPropagation(); // Предотвращаем всплытие события
-                      }
-                  });
-              </script>
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %} Update Account {% endblock %}
+{% block title %} Update account {% endblock %}
 
 {% block content %}
 
@@ -23,52 +23,59 @@
              <div class="row py-5">
                 <div class="col-lg-12 d-flex justify-content-center flex-column mx-auto">
                   <div class="card-header pb-0 text-left">
-                    <h4 class="font-weight-bolder">Update Account</h4>
+                    <h4 class="font-weight-bolder">Update account</h4>
                   </div>
                   <div class="card-body">
-                      <form role="form" method="post" action="">
-                        {% csrf_token %}
-                        <div class="form-group row">
-                          <div class="col">
-                            {{ form.username|as_crispy_field }}
-                          </div>
-                          <div class="col">
-                            {{ form.email|as_crispy_field }}
-                          </div>
+                    <form role="form" method="post" action="">
+                      {% csrf_token %}
+                      <div class="form-group row">
+                        <div class="col">
+                          {{ form.username|as_crispy_field }}
                         </div>
-                        <div class="form-group row">
-                          <div class="col">
-                      {{ form.password1|as_crispy_field }}
-                    </div>
-                          <div class="col">
-                      {{ form.password2|as_crispy_field }}
-                    </div>
+                        <div class="col">
+                          {{ form.email|as_crispy_field }}
                         </div>
-                        <div class="form-group row">
-                          <div class="col">
-                            {{ form.first_name|as_crispy_field }}
-                          </div>
-                          <div class="col">
-                            {{ form.last_name|as_crispy_field }}
-                          </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col">
+                          {{ form.password1|as_crispy_field }}
                         </div>
-                        <div class="form-group row">
-                            <div class="col">
-                              {{ form.position|as_crispy_field }}
-                            </div>
-                            <div class="col">
-                               {{ form.team|as_crispy_field }}
-                             </div>
-                            <div class="col">
-                               {{ form.rating_points|as_crispy_field }}
-                             </div>
-                          </div>
-                        <div class="mx-auto">
-                          <input type="submit" class="btn btn-lg bg-gradient-dark mt-4 mb-0" value="Submit">
-                          <a href="{% url 'workflow_organizer:worker-detail' pk=worker.id %}" class="btn btn-lg bg-gradient-light mt-4 mb-0 mx-3">Cancel</a>
+                        <div class="col">
+                          {{ form.password2|as_crispy_field }}
                         </div>
-                      </form>
-                    </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col">
+                          {{ form.first_name|as_crispy_field }}
+                        </div>
+                        <div class="col">
+                          {{ form.last_name|as_crispy_field }}
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-4">
+                          {{ form.position|as_crispy_field }}
+                        </div>
+                        <div class="col-4 mt-0">
+                          <div style="display: inline-block;">
+                            <p class="font-weight-bold small mb-2">Team</p>
+                          </div>
+                          <select id="teams" name="teams" class="form-select mt-0" multiple aria-label="multiple select example">
+                            {% for team in teams %}
+                              <option value="{{ team.id }}">{{ team.name }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                        <div class="col-4">
+                          {{ form.rating_points|as_crispy_field }}
+                        </div>
+                      </div>
+                      <div class="mx-auto">
+                        <input type="submit" class="btn btn-lg bg-gradient-dark mt-4 mb-0" value="Submit">
+                        <a href="{% url 'workflow_organizer:worker-detail' pk=worker.id %}" class="btn btn-lg bg-gradient-light mt-4 mb-0 mx-3">Cancel</a>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>

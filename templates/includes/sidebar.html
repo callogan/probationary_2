@@ -75,8 +75,16 @@
                      <li class="nav-item ms-lg-auto">
                       <a class="nav-link nav-link-icon me-2"
                         href="{% url 'workflow_organizer:worker-detail' pk=user.id %}">
-                        <img class="avatar avatar-sm my-0 rounded-circle" style="object-fit: cover;" src="{% static 'img/team/'|add:user.username|add:'.jpeg' %}">
+                        <img class="avatar avatar-sm my-0 rounded-circle" style="object-fit: cover;"
+                             src="{% static 'img/team/'|add:user.username|add:'.jpeg' %}"
+                             id="avatar-{{ worker.id }}-0"
+                             onerror="placeholderAvatar(this)">
                       </a>
+                      <script>
+                        function placeholderAvatar(img) {
+                          img.src = "{% static 'img/team/avatar-placeholder.jpeg' %}";
+                        }
+                      </script>
                     </li>
                     <li class="nav-item dropdown ms-lg-auto">
                       <a class="nav-link dropdown-toggle d-flex cursor-pointer align-items-center text-primary" id="userDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

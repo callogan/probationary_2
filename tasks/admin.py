@@ -2,7 +2,17 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 
-from .models import TaskType, Task, Worker, Position, ProjectCategory, Project, Team, WorkerEvaluation, ProjectBlock
+from .models import (
+    Task,
+    TaskType,
+    Project,
+    ProjectBlock,
+    ProjectCategory,
+    Worker,
+    Position,
+    Team,
+    WorkerEvaluation,
+)
 
 
 @admin.register(Project)
@@ -15,15 +25,14 @@ class ProjectAdmin(admin.ModelAdmin):
         "project_category",
         "team",
         "tag_list",
-        "project_blocks_display"
+        "project_blocks_display",
     )
 
     def project_blocks_display(self, obj):
-        # Получаем список блоков проекта в виде текстовой строки
         blocks = ", ".join([block.name for block in obj.projectblock_set.all()])
         return blocks
 
-    project_blocks_display.short_description = "Project Blocks"  # Задаем заголовок столбца
+    project_blocks_display.short_description = "Project Blocks"
     list_filter = ("progress", "priority", "project_category", "tags__name")
     search_fields = ("name",)
 
@@ -65,8 +74,6 @@ admin.site.register(Team)
 admin.site.register(TaskType)
 admin.site.register(ProjectCategory)
 admin.site.register(ProjectBlock)
-# admin.site.register(Tag)
 admin.site.register(Position)
 admin.site.unregister(Group)
 admin.site.register(WorkerEvaluation)
-
