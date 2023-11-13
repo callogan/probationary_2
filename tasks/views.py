@@ -503,6 +503,7 @@ class ProjectTrackingPanelView(TemplateView):
         predominant_status_uncompleted, average_percent_uncompleted = budget_status_uncompleted(uncompleted_projects)
 
         print(predominant_status_completed)
+        print(predominant_status_uncompleted)
 
         progress_list = []
 
