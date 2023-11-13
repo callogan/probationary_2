@@ -6,6 +6,6 @@
 
 ## Demo
 
-![img.png](demo/dashboard_1.png)
-![img_1.png](demo/project_panel_1.png)
-![img_2.png](demo/task_panel_1.png)
+![img.png](demo/dashboard.png)
+![img_1.png](demo/project_tracking_panel.png)
+![img_2.png](demo/task_panel.png)
