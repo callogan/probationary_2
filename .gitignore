@@ -5,3 +5,4 @@ django-crispy-forms==1.14.0
 django-bootstrap5==23.3
 django-debug-toolbar==4.1.0
 /.idea/vcs.xml
+**__pycache__

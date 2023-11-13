@@ -502,6 +502,8 @@ class ProjectTrackingPanelView(TemplateView):
         predominant_status_completed, average_percent_completed = budget_status_completed(completed_projects)
         predominant_status_uncompleted, average_percent_uncompleted = budget_status_uncompleted(uncompleted_projects)
 
+        print(predominant_status_completed)
+
         progress_list = []
 
         for project in Project.objects.all():
